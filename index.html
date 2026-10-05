@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sangam, the weekly merge</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id=%22g%22%20x1=%220%22%20y1=%220%22%20x2=%220%22%20y2=%221%22%3E%3Cstop%20offset=%220%22%20stop-color=%22#1b3a57%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22#0b1d2a%22/%3E%3C/linearGradient%3E%3CradialGradient%20id=%22h%22%20cx=%2250%%22%20cy=%2266%%22%20r=%2240%%22%3E%3Cstop%20offset=%220%22%20stop-color=%22#ffb86b%22%20stop-opacity=%22.55%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22#ffb86b%22%20stop-opacity=%220%22/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle%20cx=%2232%22%20cy=%2232%22%20r=%2231%22%20fill=%22url%28#g%29%22/%3E%3Ccircle%20cx=%2232%22%20cy=%2242%22%20r=%2222%22%20fill=%22url%28#h%29%22/%3E%3Cg%20fill=%22none%22%20stroke=%22#9fe3d2%22%20stroke-width=%223.2%22%20stroke-linecap=%22round%22%3E%3Cpath%20d=%22M13%2013c5%2016%2013%2022%2019%2029%22/%3E%3Cpath%20d=%22M32%2011v31%22/%3E%3Cpath%20d=%22M51%2013c-5%2016-13%2022-19%2029%22/%3E%3Cpath%20d=%22M32%2042v12%22%20stroke=%22#d6f6ec%22%20stroke-width=%223.8%22/%3E%3C/g%3E%3Ccircle%20cx=%2232%22%20cy=%2242%22%20r=%223.6%22%20fill=%22#ffd9a0%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --water:#0b1d2a; --sky:#16304a; --horizon:#2a6584;
+    --mint:#9fe3d2; --mint-dim:rgba(159,227,210,.34); --mint-faint:rgba(159,227,210,.14); --moss:#5dd6a8;
+    --lantern:#ffb86b; --lantern-hi:#ffe2b8;
+    --paper:#eef3f1; --paper-dim:rgba(238,243,241,.64); --paper-faint:rgba(238,243,241,.36);
+    --glass:rgba(10,29,42,.56); --line:rgba(159,227,210,.18);
+    --waterline:49vh;
+    --serif:"Fraunces", Georgia, "Times New Roman", serif;
+    --sans:"Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{min-height:100%;}
+  body{
+    background:var(--water); color:var(--paper); font-family:var(--sans); font-size:16px; line-height:1.5;
+    overflow-x:hidden; text-align:center; -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:rgba(159,227,210,.32);}
+  button{font-family:inherit;}
+
+  /* ───────── the scene: sky, aurora, mountains, water, mist ───────── */
+  .scene{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
+  .sky{position:absolute; inset:0;
+    background:linear-gradient(180deg,#07121f 0%,#102741 30%,#1b4766 44%,#2a6584 48.6%,#1f556f 49.2%,#143a4f 56%,#0c2232 72%,#0b1d2a 100%);}
+  .aurora{position:absolute; left:-22%; right:-22%; top:-12%; height:58%; filter:blur(46px); opacity:.58;
+    mix-blend-mode:screen; transition:opacity 2.4s ease; will-change:transform;}
+  .aurora span{position:absolute; inset:0; animation:auroraA 38s ease-in-out infinite alternate;
+    background:radial-gradient(58% 40% at 30% 42%, rgba(93,214,168,.38), transparent 62%);}
+  .aurora span:nth-child(2){animation:auroraB 47s ease-in-out infinite alternate;
+    background:radial-gradient(50% 36% at 70% 32%, rgba(159,227,210,.30), transparent 62%);}
+  .aurora span:nth-child(3){animation:auroraC 56s ease-in-out infinite alternate;
+    background:radial-gradient(44% 30% at 52% 58%, rgba(124,170,255,.22), transparent 62%);}
+  @keyframes auroraA{from{transform:translateX(-5%) skewX(-7deg);}to{transform:translateX(5%) skewX(5deg);}}
+  @keyframes auroraB{from{transform:translateX(5%) translateY(2%);}to{transform:translateX(-6%) translateY(-3%);}}
+  @keyframes auroraC{from{transform:translateX(-3%) scaleY(1);}to{transform:translateX(4%) scaleY(1.18);}}
+  body.flowing .aurora, body.done .aurora{opacity:.95;}
+
+  .reflect{position:absolute; left:-22%; right:-22%; top:var(--waterline); height:52%; filter:blur(40px); opacity:.3;
+    mix-blend-mode:screen; transform:scaleY(-1); transform-origin:top; transition:opacity 2.4s ease;}
+  .reflect span{position:absolute; inset:0; animation:auroraA 38s ease-in-out infinite alternate;
+    background:radial-gradient(58% 40% at 30% 42%, rgba(93,214,168,.38), transparent 62%);}
+  .reflect span:nth-child(2){animation:auroraB 47s ease-in-out infinite alternate;
+    background:radial-gradient(50% 36% at 70% 32%, rgba(159,227,210,.30), transparent 62%);}
+  body.flowing .reflect, body.done .reflect{opacity:.5;}
+
+  .range{position:absolute; left:-3%; width:106%; bottom:calc(100% - var(--waterline)); height:30vh;
+    transition:transform .8s cubic-bezier(.2,.6,.2,1); will-change:transform;}
+  .range svg{position:absolute; inset:0; width:100%; height:100%;}
+  .range.mirror{bottom:auto; top:var(--waterline); transform:scaleY(-1); opacity:.28; filter:blur(1.6px);}
+  .sheen{position:absolute; left:0; right:0; top:var(--waterline); height:1px;
+    background:linear-gradient(90deg, transparent, rgba(159,227,210,.5) 35%, rgba(238,243,241,.6) 50%, rgba(159,227,210,.5) 65%, transparent);}
+  .mist{position:absolute; left:-30%; width:160%; height:26vh; top:calc(var(--waterline) - 10vh); pointer-events:none;
+    background:radial-gradient(55% 100% at 50% 60%, rgba(159,227,210,.07), transparent 70%);
+    animation:mistDrift 52s linear infinite alternate;}
+  .mist.two{top:calc(var(--waterline) + 4vh); opacity:.7; animation-duration:71s; animation-direction:alternate-reverse;}
+  @keyframes mistDrift{from{transform:translateX(-4%);}to{transform:translateX(4%);}}
+
+  #lake{position:fixed; inset:0; z-index:1; pointer-events:none;}
+
+  /* ───────── content ───────── */
+  main{position:relative; z-index:2; max-width:1020px; margin:0 auto; padding:18px 22px 48px;}
+
+  .mark{width:50px; height:50px; margin:0 auto 4px; filter:drop-shadow(0 0 18px rgba(159,227,210,.35));}
+  h1{font-family:var(--serif); font-weight:300; font-size:clamp(44px,6.6vw,72px); line-height:1; letter-spacing:-.015em;
+    color:var(--paper); font-variation-settings:"opsz" 144;}
+  .tagline{font-family:var(--serif); font-style:italic; font-weight:300; font-size:clamp(19px,2.4vw,24px);
+    color:var(--paper-dim); margin-top:6px;}
+
+  /* the landing: where files arrive */
+  #pier{position:relative; margin:20px auto 0; max-width:700px; padding:18px 28px 20px; border-radius:30px; cursor:pointer;
+    background:linear-gradient(180deg, rgba(14,40,58,.62), rgba(10,29,42,.72));
+    border:1px solid var(--line); outline:none;
+    box-shadow:0 30px 70px -40px rgba(0,0,0,.8), inset 0 1px 0 rgba(238,243,241,.06);
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+    transition:border-color .4s, box-shadow .5s, transform .5s cubic-bezier(.2,.7,.2,1);}
+  #pier::before{content:""; position:absolute; inset:-1px; border-radius:31px; pointer-events:none; opacity:0; transition:opacity .5s;
+    background:radial-gradient(60% 120% at 50% 100%, rgba(159,227,210,.18), transparent 70%);}
+  #pier:hover, #pier:focus-visible, #pier.over{border-color:rgba(159,227,210,.55);
+    box-shadow:0 30px 70px -40px rgba(0,0,0,.8), 0 0 50px rgba(159,227,210,.16), inset 0 1px 0 rgba(238,243,241,.08);}
+  #pier:hover::before, #pier.over::before{opacity:1;}
+  #pier.over{transform:translateY(-3px);}
+  #pier:focus-visible{outline:2px solid var(--mint); outline-offset:4px;}
+  .rings{width:64px; height:30px; margin:0 auto 4px; opacity:.85;}
+  .rings ellipse{fill:none; stroke:var(--mint); stroke-width:1.2; transform-origin:32px 15px;}
+  .rings ellipse:nth-child(1){animation:ring 4.5s ease-out infinite;}
+  .rings ellipse:nth-child(2){animation:ring 4.5s ease-out 1.5s infinite;}
+  .rings ellipse:nth-child(3){animation:ring 4.5s ease-out 3s infinite;}
+  @keyframes ring{0%{transform:scale(.15); opacity:0;}20%{opacity:.9;}100%{transform:scale(1); opacity:0;}}
+  #pier h2{font-family:var(--serif); font-weight:400; font-size:25px; line-height:1.2; color:var(--paper);}
+  #pier p{color:var(--paper-dim); font-size:15px; max-width:54ch; margin:6px auto 0; line-height:1.5;}
+  #pier .choose{display:inline-block; margin-top:12px; padding:8px 20px; border-radius:999px; font-weight:600; font-size:14px;
+    color:var(--water); background:var(--mint); transition:background .3s, transform .3s;}
+  #pier:hover .choose, #pier.over .choose{background:#c7f1e6; transform:translateY(-1px);}
+  #fileInput{display:none;}
+
+  /* three lanterns */
+  .lanterns{position:relative; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin:10px auto 0; max-width:880px;}
+  .slot{position:relative; min-width:0; padding:10px 10px 8px; border-radius:22px; transition:background .5s;}
+  .slot.filled{background:radial-gradient(70% 90% at 50% 20%, rgba(255,184,107,.07), transparent 70%);}
+  .lantern{display:block; width:100px; height:134px; margin:0 auto; position:relative;
+    transition:transform .6s, opacity .6s; will-change:transform;}
+  body.flowing .lantern{transition:transform 1.5s cubic-bezier(.65,0,.35,1), opacity .6s 1.15s;}
+  .bob{width:100%; height:100%; animation:bob 5.6s ease-in-out infinite;}
+  .slot:nth-child(2) .bob{animation-delay:-1.9s; animation-duration:6.2s;}
+  .slot:nth-child(3) .bob{animation-delay:-3.4s; animation-duration:5.1s;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-.6deg);}50%{transform:translateY(-5px) rotate(.6deg);}}
+  .lantern svg{width:100%; height:100%; overflow:visible;}
+  .lantern .body{fill:rgba(238,243,241,.05); stroke:var(--paper-faint); stroke-width:1.2; transition:fill .8s, stroke .8s, filter .8s;}
+  .lantern .cap{fill:rgba(238,243,241,.14); transition:fill .8s;}
+  .lantern .rib{stroke:rgba(238,243,241,.14); stroke-width:1; transition:stroke .8s;}
+  .lantern .cord{stroke:var(--paper-faint); stroke-width:1.1;}
+  .lantern .flame, .lantern .halo, .lantern .wake{opacity:0; transition:opacity .9s;}
+  #one .flame{opacity:.95;} #one .halo{opacity:1;} #one .wake{opacity:0;}
+  .lantern .wake{transform-origin:56px 142px;}
+  .slot.filled .body{fill:url(#paperGlow); stroke:rgba(255,226,184,.55); filter:drop-shadow(0 0 14px rgba(255,184,107,.55));}
+  .slot.filled .cap{fill:#8a5a2b;}
+  .slot.filled .rib{stroke:rgba(120,70,20,.35);}
+  .slot.filled .flame{opacity:.92; animation:flame 2.4s ease-in-out infinite; transform-origin:56px 78px;}
+  .slot.filled .halo{opacity:1;}
+  .slot.filled .wake{opacity:.7; animation:wake 5.6s ease-in-out infinite;}
+  @keyframes flame{0%,100%{transform:scale(1) translateY(0);}35%{transform:scale(1.08,1.14) translateY(-1px);}70%{transform:scale(.94,1.04) translateY(1px);}}
+  @keyframes wake{0%,100%{transform:scaleX(1);}50%{transform:scaleX(1.12);}}
+  .slot .role{font-family:var(--serif); font-size:20px; font-weight:400; margin-top:2px; color:var(--paper);}
+  .slot:not(.filled) .file{display:none;}
+  .slot .file{font-size:13.5px; color:var(--paper-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-height:20px; margin-top:3px; line-height:1.4; padding:0 6px;}
+  .slot .meta{font-size:13.5px; color:var(--mint); opacity:.85; min-height:20px; margin-top:2px; line-height:1.4;}
+  .slot .remove{display:none; margin-top:6px; background:none; border:1px solid rgba(238,243,241,.2); color:var(--paper-dim);
+    font-size:12.5px; font-weight:500; padding:5px 14px; border-radius:999px; cursor:pointer; transition:.3s;}
+  .slot .remove:hover{border-color:rgba(238,243,241,.5); color:var(--paper);}
+  .slot .remove:focus-visible{outline:2px solid var(--mint); outline-offset:2px;}
+  .slot.filled .remove{display:inline-block;}
+  .slot .label{transition:opacity .6s;}
+  body.flowing .slot .label{opacity:0;}
+  #swap{transition:opacity .5s, color .3s;}
+  body.flowing #swap{opacity:0; pointer-events:none;}
+  body.flowing .lantern{transform:translate(var(--dx,0px), var(--dy,0px)); opacity:0;}
+
+  /* the one lantern that forms at the centre and rises */
+  #one{position:absolute; left:50%; top:50%; width:112px; height:150px; transform:translate(-50%,-64%); opacity:0;
+    pointer-events:none; transition:opacity .3s;}
+  #one .rise{width:100%; height:100%; filter:drop-shadow(0 0 28px rgba(255,184,107,.75));}
+  #one svg{width:100%; height:100%; overflow:visible;}
+  #one .body{fill:url(#paperGlowOne); stroke:rgba(255,226,184,.7); stroke-width:1.3;}
+  #one .cap{fill:#8a5a2b;} #one .rib{stroke:rgba(120,70,20,.35); stroke-width:1;} #one .cord{stroke:rgba(255,226,184,.5); stroke-width:1.1;}
+  #one .flame{animation:flame 1.6s ease-in-out infinite; transform-origin:56px 78px;}
+  body.flowing #one{opacity:1; transition:opacity .5s 1.1s;}
+  body.risen #one .rise{animation:rise 3.4s cubic-bezier(.55,0,.75,.35) forwards;}
+  @keyframes rise{0%{transform:translate(0,0) scale(1); opacity:1;}45%{transform:translate(22px,-34vh) scale(.74); opacity:1;}
+    100%{transform:translate(-14px,-82vh) scale(.4); opacity:0;}}
+
+  #swap{margin:4px auto 0; background:none; border:none; color:var(--paper-faint); font-size:14px; cursor:pointer;
+    padding:6px 10px; border-radius:999px; transition:color .3s;}
+  #swap:hover{color:var(--mint);}
+  #swap:focus-visible{outline:2px solid var(--mint);}
+
+  /* the merge */
+  .meet{margin:12px auto 0;}
+  #flow{appearance:none; border:1px solid var(--mint-dim); color:var(--paper); cursor:pointer;
+    background:linear-gradient(180deg, rgba(159,227,210,.16), rgba(159,227,210,.05));
+    font-family:var(--serif); font-style:italic; font-weight:400; font-size:25px; padding:15px 40px 17px; border-radius:999px;
+    transition:opacity .6s, box-shadow .8s, border-color .6s, transform .4s; will-change:transform;}
+  #flow[disabled]{opacity:.38; cursor:not-allowed;}
+  #flow:not([disabled]){border-color:rgba(159,227,210,.6); animation:breathe 4.2s ease-in-out infinite;}
+  #flow:not([disabled]):hover{transform:translateY(-2px); box-shadow:0 0 60px rgba(159,227,210,.35), inset 0 0 28px rgba(159,227,210,.16);}
+  #flow:focus-visible{outline:2px solid var(--mint); outline-offset:5px;}
+  @keyframes breathe{0%,100%{box-shadow:0 0 26px rgba(159,227,210,.18), inset 0 0 18px rgba(159,227,210,.08);}
+    50%{box-shadow:0 0 52px rgba(159,227,210,.32), inset 0 0 28px rgba(159,227,210,.14);}}
+  .hint{font-size:14.5px; color:var(--paper-faint); margin-top:12px;}
+  #status{margin-top:8px; min-height:24px; font-size:15.5px; color:var(--paper-dim);}
+  #status.err{color:#ffc3a3;}
+  #status.ok{color:var(--mint);}
+
+  /* result */
+  #veil{position:fixed; inset:0; z-index:9; background:rgba(5,14,22,.6); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+    visibility:hidden; opacity:0; transition:opacity .9s, visibility 0s .9s;}
+  #result{position:fixed; z-index:10; left:50%; top:50%; width:min(92vw,480px); visibility:hidden; opacity:0;
+    transform:translate(-50%,-46%); transition:opacity 1s, transform 1s cubic-bezier(.2,.7,.2,1), visibility 0s 1s;
+    background:linear-gradient(180deg, rgba(16,44,62,.92), rgba(10,29,42,.95));
+    border:1px solid rgba(159,227,210,.3); border-radius:26px; padding:30px 30px 26px;
+    box-shadow:0 40px 90px -30px rgba(0,0,0,.9), 0 0 70px rgba(159,227,210,.12);}
+  body.done #veil{visibility:visible; opacity:1; transition:opacity .9s;}
+  body.done #result{visibility:visible; opacity:1; transform:translate(-50%,-50%); transition:opacity 1s, transform 1s cubic-bezier(.2,.7,.2,1);}
+  #result h2{font-family:var(--serif); font-weight:400; font-size:30px; line-height:1.1; color:var(--paper);}
+  #result .fname{font-size:13.5px; color:var(--paper-faint); margin:8px 0 16px; line-height:1.5; word-break:break-all;}
+  #result table{width:100%; border-collapse:collapse; font-size:16px;}
+  #result td{padding:7px 4px; border-bottom:1px solid rgba(159,227,210,.12); text-align:left;}
+  #result td.num{text-align:right; font-variant-numeric:tabular-nums; color:var(--mint); font-weight:500;}
+  #result tr.total td{border-bottom:none; border-top:1px solid rgba(159,227,210,.3); font-weight:600; padding-top:10px;}
+  #dupeLine{font-size:14px; color:var(--paper-dim); margin-top:14px; line-height:1.55;}
+  #again{margin-top:18px; background:var(--mint); border:none; color:var(--water); font-weight:600; font-size:14.5px;
+    padding:10px 24px; border-radius:999px; cursor:pointer; transition:.3s;}
+  #again:hover{background:#c7f1e6;}
+  #again:focus-visible{outline:2px solid var(--paper); outline-offset:3px;}
+
+  footer{margin-top:30px; position:relative; z-index:2; font-size:13.5px; color:var(--paper-faint); padding-bottom:28px;}
+
+  @media (max-width:720px){
+    .lanterns{gap:6px; margin-top:14px;}
+    .slot{padding:6px 2px 4px; border-radius:16px;}
+    .lantern{width:70px; height:94px;}
+    .slot .role{font-size:15px;}
+    .slot .file, .slot .meta{font-size:11.5px; padding:0 2px;}
+    .slot .remove{font-size:11.5px; padding:4px 11px;}
+    #one{width:80px; height:107px;}
+    #pier{padding:24px 18px 22px; border-radius:24px;}
+    #flow{font-size:22px; padding:13px 30px 15px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001s !important; animation-iteration-count:1 !important; transition-duration:.001s !important;}
+    #lake{display:none;}
+    body.flowing .lantern{opacity:0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="scene" aria-hidden="true">
+  <div class="sky"></div>
+  <div class="aurora"><span></span><span></span><span></span></div>
+  <div class="reflect"><span></span><span></span></div>
+  <div class="range" id="rangeFar">
+    <svg viewBox="0 0 1440 300" preserveAspectRatio="none">
+      <path fill="#132f45" d="M0,300 L0,232 C70,220 110,180 180,176 C250,172 290,205 350,196 C420,186 450,140 520,138 C590,136 630,172 700,170 C770,168 800,122 870,118 C940,114 980,150 1050,156 C1120,162 1160,120 1230,118 C1300,116 1350,156 1440,166 L1440,300 Z"/>
+    </svg>
+  </div>
+  <div class="range" id="rangeNear">
+    <svg viewBox="0 0 1440 300" preserveAspectRatio="none">
+      <path fill="#0b1f2e" d="M0,300 L0,262 C60,256 100,228 160,226 C230,224 260,250 320,246 C380,242 410,198 470,196 C540,194 580,236 650,238 C720,240 760,206 830,202 C900,198 930,226 1000,232 C1070,238 1110,210 1180,206 C1250,202 1300,236 1370,240 C1400,242 1420,246 1440,250 L1440,300 Z"/>
+    </svg>
+  </div>
+  <div class="range mirror">
+    <svg viewBox="0 0 1440 300" preserveAspectRatio="none">
+      <path fill="#0b1f2e" d="M0,300 L0,262 C60,256 100,228 160,226 C230,224 260,250 320,246 C380,242 410,198 470,196 C540,194 580,236 650,238 C720,240 760,206 830,202 C900,198 930,226 1000,232 C1070,238 1110,210 1180,206 C1250,202 1300,236 1370,240 C1400,242 1420,246 1440,250 L1440,300 Z"/>
+    </svg>
+  </div>
+  <div class="sheen"></div>
+  <div class="mist"></div><div class="mist two"></div>
+</div>
+<canvas id="lake" aria-hidden="true"></canvas>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="paperGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd9a0"/><stop offset="55%" stop-color="#ffb86b"/><stop offset="100%" stop-color="#e38a3d"/>
+    </linearGradient>
+    <linearGradient id="paperGlowOne" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff1d6"/><stop offset="50%" stop-color="#ffc98a"/><stop offset="100%" stop-color="#f09a4d"/>
+    </linearGradient>
+    <radialGradient id="haloG" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffb86b" stop-opacity=".55"/><stop offset="100%" stop-color="#ffb86b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<main>
+  <svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+    <g fill="none" stroke="#9fe3d2" stroke-width="2.6" stroke-linecap="round">
+      <path d="M13 11c5 16 13 22 19 29"/><path d="M32 9v31"/><path d="M51 11c-5 16-13 22-19 29"/>
+      <path d="M32 40v14" stroke="#d6f6ec" stroke-width="3"/>
+    </g>
+    <circle cx="32" cy="40" r="3.4" fill="#ffd9a0"/>
+  </svg>
+  <h1>Sangam</h1>
+  <div class="tagline">Three exports flow in. One Total sheet flows out.</div>
+
+  <div id="pier" role="button" tabindex="0" aria-label="Drop the three exports here, or press to choose files">
+    <svg class="rings" viewBox="0 0 64 30" aria-hidden="true">
+      <ellipse cx="32" cy="15" rx="30" ry="9"/><ellipse cx="32" cy="15" rx="30" ry="9"/><ellipse cx="32" cy="15" rx="30" ry="9"/>
+    </svg>
+    <h2>Set your three exports afloat</h2>
+    <p>Drag the main paid report, the bootcamp paid report and the lead export here, raw or already sorted. The lake knows them apart.</p>
+    <span class="choose">Choose files</span>
+    <input type="file" id="fileInput" multiple accept=".csv,.xlsx,.xls">
+  </div>
+
+  <div class="lanterns">
+    <div class="slot" id="slot-main">
+      <div class="lantern"><div class="bob"></div></div>
+      <div class="label">
+        <div class="role">Main paid</div>
+        <div class="file"></div><div class="meta"></div>
+        <button class="remove" data-slot="main">Remove</button>
+      </div>
+    </div>
+    <div class="slot" id="slot-bt">
+      <div class="lantern"><div class="bob"></div></div>
+      <div class="label">
+        <div class="role">Bootcamp paid</div>
+        <div class="file"></div><div class="meta"></div>
+        <button class="remove" data-slot="bt">Remove</button>
+      </div>
+    </div>
+    <div class="slot" id="slot-ex">
+      <div class="lantern"><div class="bob"></div></div>
+      <div class="label">
+        <div class="role">Lead export</div>
+        <div class="file"></div><div class="meta"></div>
+        <button class="remove" data-slot="ex">Remove</button>
+      </div>
+    </div>
+    <div id="one" aria-hidden="true"><div class="rise"></div></div>
+  </div>
+  <button id="swap">Swap the two paid files</button>
+
+  <div class="meet">
+    <button id="flow" disabled>Let the waters meet</button>
+    <div class="hint">Merges the three into one Total sheet of 18 columns and downloads the workbook.</div>
+    <div id="status" aria-live="polite"></div>
+  </div>
+</main>
+
+<div id="veil"></div>
+<div id="result" role="dialog" aria-label="Merge complete">
+  <h2>Merged into one Total sheet</h2>
+  <div class="fname">Total_Sorted_Data_File__Main__BT_Paid__Exotic__Bootcamp__Merged.xlsx has downloaded.</div>
+  <table><tbody id="sumRows"></tbody></table>
+  <div id="dupeLine"></div>
+  <button id="again">Start again</button>
+</div>
+
+<footer>A quiet tool for the weekly merge. House of EdTech lead ops.</footer>
+
+<script>
+(function (root, factory) {
+  if (typeof module !== "undefined" && module.exports) module.exports = factory();
+  else root.MergeCore = factory();
+})(typeof self !== "undefined" ? self : this, function () {
+
+  const OUT_HEADERS = ["createdAt","Day","name","email","phoneNumber","country_code",
+    "without country code","Amount","AgeGroup","Profession (PG)","Exp","paymentSlug","platform","Lead",
+    "msg1","msg2","msg3","msg4"];
+  const SOURCE_ORDER = ["Main","BT Paid","Exotic","Bootcamp"];   // row order inside the Total sheet
+  const DOW  = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+  // "What we will cover" messages: msg1 and msg4 are fixed, msg2/msg3 follow the (mapped) profession
+  const MSG1 = "What we will cover-";
+  const MSG4 = "It is a practical Hands-on Session.";
+  const MSG_GENERIC = [
+    "Turning your existing skill-set into AI-powered side-income opportunities.",
+    "Creating new income streams by combining your professional expertise with the help of AI."
+  ];
+  const MSG_BSAI = [
+    "Using AI to turn learning into skills, skills into opportunities, and opportunities into income.",
+    "Transforming what you already know into new earning possibilities with AI & much more."
+  ];
+  const MSG_BY_PROF = {
+    "Currently Student": [
+      "Discovering how AI can help you build skills and unlock side-income opportunities.",
+      "Using AI to build a skillset that goes beyond your academics, will help you even after you finish your school/college & much more."
+    ],
+    "Business Owner / Entrepreneur": [
+      "Implementing AI to streamline operations, strengthen sales & marketing, and unlock new revenue opportunities.",
+      "Developing AI skills to scale your business, increase efficiency & much more."
+    ],
+    "Educator / Teacher": [
+      "Going beyond the classroom with AI-powered skills and new income possibilities.",
+      "Turning your teaching expertise into additional income opportunities with AI skills & much more."
+    ],
+    "Finance / Banking / Insurance": [
+      "Creating new income streams by combining your finance expertise with AI.",
+      "Developing AI skills to unlock new career opportunities, earning potential & much more."
+    ],
+    "Freelancer / Consultant": MSG_BSAI,
+    "Unemployed": MSG_BSAI,
+    "IT / Software": [
+      "Turning your tech skills into AI-powered side-income opportunities.",
+      "Building and monetizing AI-based solutions, services, and digital projects & Much More."
+    ]
+  };
+  // everything else (Other, Operations, Sales, Marketing, HR, Data, Healthcare, Govt, Arts, blank "---") → generic
+  const msgsFor = prof => { const m = MSG_BY_PROF[prof] || MSG_GENERIC; return [MSG1, m[0], m[1], MSG4]; };
+
+  const norm = v => (v === null || v === undefined) ? "" : String(v).trim();
+  const toNum = v => { const s = norm(v); return /^\d+$/.test(s) ? Number(s) : v; };
+  const toAmt = v => { const s = norm(v); const n = Number(s); return (s !== "" && isFinite(n)) ? n : v; };
+  const dash  = v => norm(v) === "" ? "---" : v;   // blank AgeGroup / Profession → "---"
+  const naIf  = v => norm(v) === "" ? "NA"  : v;   // blank Exp → "NA"
+
+  function parseDMY(s) { // "23-08-2026 0.37"  (dd-mm-yyyy H.MM)
+    const m = norm(s).match(/^(\d{1,2})-(\d{1,2})-(\d{4})\s+(\d{1,2})\.(\d{1,2})/);
+    if (!m) return null;
+    return { d:+m[1], mo:+m[2], y:+m[3], hh:+m[4], mi:+m[5] };
+  }
+  function excelSerial(p) {
+    const days = Math.round((Date.UTC(p.y, p.mo - 1, p.d) - Date.UTC(1899, 11, 30)) / 86400000);
+    return days + (p.hh * 60 + p.mi) / 1440;
+  }
+  function dayLabel(p) {
+    const dow = new Date(Date.UTC(p.y, p.mo - 1, p.d)).getUTCDay(); // 0 = Sun
+    return (dow + 1) + " " + DOW[dow];                              // week runs Sun(1)..Sat(7)
+  }
+  function headerIndex(headerRow) {
+    const m = {};
+    headerRow.forEach((h, i) => { const k = norm(h); if (k && !(k in m)) m[k] = i; });
+    return m;
+  }
+  const blankRow = row => !row || row.every(c => norm(c) === "");
+
+  const PROF_MAP = {
+    opt_arts_media_creative_professional: "Arts / Media / Creative Professional",
+    opt_business_owner: "Business Owner / Entrepreneur",
+    opt_student: "Currently Student",
+    opt_data: "Data",
+    opt_educator_teacher: "Educator / Teacher",
+    opt_finance_banking_insurance: "Finance / Banking / Insurance",
+    opt_freelancer: "Freelancer / Consultant",
+    opt_govt_defence_professional: "Govt /Defence Professional",
+    opt_healthcare: "Healthcare",
+    opt_hr: "HR",
+    opt_it_software: "IT / Software",
+    opt_it_software_data: "IT / Software",
+    opt_marketing: "Marketing",
+    opt_operations_manufacturing: "Operations / Manufacturing",
+    opt_other: "Other",
+    opt_sales: "Sales",
+    opt_unemployed: "Unemployed"
+  };
+  const mapProf = v => { const t = norm(v); if (!t) return "---"; return PROF_MAP[t] !== undefined ? PROF_MAP[t] : t; };
+
+  function buildPaidRows(aoa, lead) {
+    const H = headerIndex(aoa[0]); const out = [];
+    const g = (row, h) => (H[h] !== undefined && row[H[h]] !== undefined) ? row[H[h]] : "";
+    for (let r = 1; r < aoa.length; r++) {
+      const row = aoa[r]; if (blankRow(row)) continue;
+      const p = parseDMY(g(row, "createdAt"));
+      const prof = mapProf(g(row, "Profession (PG)"));
+      out.push({
+        cells: [
+          p ? { date: true, v: excelSerial(p) } : g(row, "createdAt"),
+          p ? dayLabel(p) : "",
+          g(row, "name"), g(row, "email"),
+          toNum(g(row, "phoneNumber")), toNum(g(row, "country_code")), toNum(g(row, "without country code")),
+          toAmt(g(row, "Amount")), dash(g(row, "AgeGroup")), prof,
+          "NA", g(row, "paymentSlug"), "NA", lead,
+          ...msgsFor(prof)
+        ],
+        phone: norm(g(row, "phoneNumber")),
+        email: norm(g(row, "email")).toLowerCase(),
+        prof,
+        age:   norm(g(row, "AgeGroup"))
+      });
+    }
+    return out;
+  }
+
+  function buildLeadRows(aoa, lead) {
+    const H = headerIndex(aoa[0]); const out = [];
+    const g = (row, h) => (H[h] !== undefined && row[H[h]] !== undefined) ? row[H[h]] : "";
+    for (let r = 1; r < aoa.length; r++) {
+      const row = aoa[r]; if (blankRow(row)) continue;
+      const pd = parseDMY(g(row, "Date Created"));
+      const prof = mapProf(g(row, "current_profession"));
+      out.push({
+        cells: [
+          pd ? { date: true, v: excelSerial(pd) } : norm(g(row, "Date Created")), g(row, "Day"),
+          g(row, "name"), g(row, "email"),
+          toNum(g(row, "phone_number")), toNum(g(row, "country_code")), toNum(g(row, "without country code")),
+          "NA", dash(g(row, "age_group")), prof,
+          naIf(g(row, "experience_in_years")), g(row, "form_id.slug"), g(row, "Platform"), lead,
+          ...msgsFor(prof)
+        ],
+        phone: norm(g(row, "phone_number")),
+        email: norm(g(row, "email")).toLowerCase(),
+        prof,
+        age:   norm(g(row, "age_group"))
+      });
+    }
+    return out;
+  }
+
+  function merge(mainAoa, btAoa, exoticAoa, bootcampAoa) {
+    const mainRows = buildPaidRows(mainAoa, "Main");
+    const btRows   = buildPaidRows(btAoa, "BT Paid");
+
+    // global one-pass dedup by phone OR email, priority: Main, BT Paid, Exotic, Bootcamp
+    const keyP = new Set(), keyE = new Set();
+    const keepRow = r => {
+      if ((r.phone && keyP.has(r.phone)) || (r.email && keyE.has(r.email))) return false;
+      if (r.phone) keyP.add(r.phone);
+      if (r.email) keyE.add(r.email);
+      return true;
+    };
+    const exAll = buildLeadRows(exoticAoa, "Exotic");
+    const bcAll = buildLeadRows(bootcampAoa, "Bootcamp");
+    const mainAll = mainRows, btAll = btRows;
+    // priority: BT Paid, then Main, then Bootcamp, then Exotic
+    const btK   = btAll.filter(keepRow);
+    const mainK = mainAll.filter(keepRow);
+    const bc = bcAll.filter(keepRow);
+    const ex = exAll.filter(keepRow);
+
+    // One Total sheet: every kept row, stacked Main → BT Paid → Exotic → Bootcamp
+    // (each block already date-sorted by the raw transformers); the Lead column tells them apart.
+    const bySource = { "Main": mainK, "BT Paid": btK, "Exotic": ex, "Bootcamp": bc };
+    const total = [].concat(...SOURCE_ORDER.map(s => bySource[s]));
+
+    return {
+      sheets: { "Total": total },
+      stats: {
+        inputs: { main: mainRows.length, btPaid: btRows.length, exotic: exAll.length, bootcamp: bcAll.length },
+        dupesRemoved: { exotic: exAll.length - ex.length, bootcamp: bcAll.length - bc.length,
+                        paid: (mainAll.length - mainK.length) + (btAll.length - btK.length) },
+        counts: Object.fromEntries(SOURCE_ORDER.map(s => [s, bySource[s].length]))
+      }
+    };
+  }
+
+  const PHONE_COL = OUT_HEADERS.indexOf("phoneNumber");   // shown as plain integer, never 9.17E+11
+  function sheetFromRows(XLSX, rows) {
+    const ws = {};
+    OUT_HEADERS.forEach((h, c) => {
+      ws[XLSX.utils.encode_cell({ r: 0, c })] = c === PHONE_COL ? { t: "s", v: h, z: "0" } : { t: "s", v: h };
+    });
+    rows.forEach((row, i) => {
+      row.cells.forEach((val, c) => {
+        if (val === null || val === undefined) return;
+        const addr = XLSX.utils.encode_cell({ r: i + 1, c });
+        if (typeof val === "object" && val.date) ws[addr] = { t: "n", v: val.v, z: "m/d/yy h:mm" };
+        else if (typeof val === "number")        ws[addr] = c === PHONE_COL ? { t: "n", v: val, z: "0" } : { t: "n", v: val };
+        else { const s = String(val); if (s === "") return; ws[addr] = c === PHONE_COL ? { t: "s", v: s, z: "0" } : { t: "s", v: s }; }
+      });
+    });
+    ws["!ref"] = XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: { c: OUT_HEADERS.length - 1, r: rows.length } });
+    ws["!cols"] = [16,8,20,30,14,12,18,10,10,28,12,26,12,10].map(w => ({ wch: w }));   // msg1-msg4 keep default width
+    return ws;
+  }
+
+  function toWorkbook(XLSX, result) {
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, sheetFromRows(XLSX, result.sheets["Total"]), "Total");
+    return wb;
+  }
+
+  return { merge, toWorkbook, OUT_HEADERS, SOURCE_ORDER, parseDMY, dayLabel };
+});
+
+/* Raw-input transformers: raw exports → sorted-equivalent AOAs feeding the existing merge */
+(function (root, factory) {
+  if (typeof module !== "undefined" && module.exports) module.exports = factory();
+  else root.RawCore = factory();
+})(typeof self !== "undefined" ? self : this, function () {
+  const ITU = ("1 7 20 27 30 31 32 33 34 36 39 40 41 43 44 45 46 47 48 49 51 52 53 54 55 56 57 58 60 61 62 63 64 65 66 " +
+    "81 82 84 86 90 91 92 93 94 95 98 211 212 213 216 218 220 221 222 223 224 225 226 227 228 229 230 231 232 233 234 235 " +
+    "236 237 238 239 240 241 242 243 244 245 246 248 249 250 251 252 253 254 255 256 257 258 260 261 262 263 264 265 266 " +
+    "267 268 269 290 291 297 298 299 350 351 352 353 354 355 356 357 358 359 370 371 372 373 374 375 376 377 378 380 381 " +
+    "382 383 385 386 387 389 420 421 423 500 501 502 503 504 505 506 507 508 509 590 591 592 593 594 595 596 597 598 599 " +
+    "670 672 673 674 675 676 677 678 679 680 681 682 683 685 686 687 688 689 690 691 692 850 852 853 855 856 880 886 960 " +
+    "961 962 963 964 965 966 967 968 970 971 972 973 974 975 976 977 992 993 994 995 996 998").split(" ");
+  const CCS = new Set(ITU);
+  const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const KEEP = ["ai-tools","ai-bootcamp","ai-claude","py"];
+  const PLATFORM_ALIAS = { "big-basket":"Bigbasket", "gpay":"Googlepay", "1mg":"1Mg" };
+
+  const norm = v => (v === null || v === undefined) ? "" : String(v).trim();
+  const digitsOf = v => norm(v).replace(/\D/g, "");
+
+  // Paid exports: longest-prefix country code, remainder kept whole
+  function parsePaid(rawp) {
+    const d = digitsOf(rawp);
+    if (d.length <= 10) return [d, "91", d];
+    for (const L of [3, 2, 1]) {
+      const p = d.slice(0, L);
+      if (CCS.has(p) && d.length - L >= 7) return [d, p, d.slice(L)];
+    }
+    return [d, "91", d.slice(-10)];
+  }
+  // Lead exports: Indian-number priority — junk foreign prefixes on 91-numbers stripped
+  function parseLead(rawp) {
+    const d = digitsOf(rawp);
+    if (d.length <= 10) return [d, "91", d];
+    if (d.startsWith("91")) return [d, "91", d.slice(-10)];
+    for (const L of [3, 2, 1]) {
+      const p = d.slice(0, L);
+      if (CCS.has(p) && p !== "93") {
+        const rem = d.slice(L);
+        if (rem.length >= 7 && rem.length <= 10) return [d, p, rem];
+      }
+    }
+    return [d, "91", d.slice(-10)];
+  }
+
+  function fmtDate(y, mo, dy, hh, mi) {
+    return String(dy).padStart(2, "0") + "-" + String(mo).padStart(2, "0") + "-" + y + " " + hh + "." + String(mi).padStart(2, "0");
+  }
+  function dayOf(y, mo, dy) {
+    const dow = new Date(Date.UTC(y, mo - 1, dy)).getUTCDay();
+    return (dow + 1) + " " + DOW[dow];
+  }
+  // one-pass combined dedup: keep row iff neither its phone nor email was already kept
+  function onePass(rows, pkey, ekey) {
+    const sp = new Set(), se = new Set(), out = [];
+    for (const r of rows) {
+      const p = r[pkey], e = r[ekey];
+      if ((p && sp.has(p)) || (e && se.has(e))) continue;
+      out.push(r);
+      if (p) sp.add(p);
+      if (e) se.add(e);
+    }
+    return out;
+  }
+  const hIdx = header => { const m = {}; header.forEach((h, i) => { const k = norm(h); if (k && !(k in m)) m[k] = i; }); return m; };
+
+  // raw report-CustomersByBatch CSV → sorted-equivalent paid AOA
+  function transformPaidRaw(aoa) {
+    const H = hIdx(aoa[0]);
+    const g = (row, h) => (H[h] !== undefined && row[H[h]] !== undefined) ? row[H[h]] : "";
+    const rows = [];
+    for (let r = 1; r < aoa.length; r++) {
+      const row = aoa[r];
+      if (!row || row.every(c => norm(c) === "")) continue;
+      const m = norm(g(row, "createdAt")).match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})\s+(\d{1,2})[:.](\d{2})/);
+      if (!m) continue;
+      const [_, dy, mo, y, hh, mi] = m.map(Number);
+      const [pn, cc, wo] = parsePaid(g(row, "phoneNumber"));
+      rows.push({
+        ts: Date.UTC(y, mo - 1, dy, hh, mi), ord: r, pn, email: norm(g(row, "email")),
+        out: [fmtDate(y, mo, dy, hh, mi), g(row, "name"), g(row, "email"), pn, cc, wo,
+              g(row, "Amount"), g(row, "AgeGroup"), g(row, "Profession (PG)"), g(row, "paymentSlug")]
+      });
+    }
+    rows.sort((a, b) => a.ts - b.ts || a.ord - b.ord);
+    const kept = onePass(rows, "pn", "email");
+    return [["createdAt","name","email","phoneNumber","country_code","without country code","Amount","AgeGroup","Profession (PG)","paymentSlug"],
+            ...kept.map(r => r.out)];
+  }
+
+  function platformOf(slug) {
+    let s = norm(slug);
+    if (s === "ai-bootcamp") return "Bootcamp";
+    for (const f of ["ai-bootcamp-","ai-claude-","ai-tools-","py-"]) {
+      if (s.startsWith(f)) { s = s.slice(f.length); break; }
+    }
+    s = s.replace(/-?\d+$/, "");
+    if (PLATFORM_ALIAS[s]) return PLATFORM_ALIAS[s];
+    return s.split("-").filter(Boolean).map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()).join("-");
+  }
+
+  // raw export-lead_data CSV → {exAoa, bcAoa} sorted-equivalent
+  function transformLeadRaw(aoa) {
+    const H = hIdx(aoa[0]);
+    const g = (row, h) => (H[h] !== undefined && row[H[h]] !== undefined) ? row[H[h]] : "";
+    const rows = [];
+    for (let r = 1; r < aoa.length; r++) {
+      const row = aoa[r];
+      if (!row || row.every(c => norm(c) === "")) continue;
+      const slug = norm(g(row, "form_id.slug"));
+      if (!KEEP.some(f => slug === f || slug.startsWith(f + "-"))) continue;
+      const m = norm(g(row, "date_created")).match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/);
+      if (!m) continue;
+      // UTC → IST (+5:30)
+      const t = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]) + (5 * 60 + 30) * 60000);
+      const y = t.getUTCFullYear(), mo = t.getUTCMonth() + 1, dy = t.getUTCDate(), hh = t.getUTCHours(), mi = t.getUTCMinutes();
+      const [pn, cc, wo] = parseLead(g(row, "phone_number"));
+      rows.push({
+        ts: t.getTime(), ord: r, pn, email: norm(g(row, "email")), isbc: slug.startsWith("ai-bootcamp"),
+        out: [fmtDate(y, mo, dy, hh, mi), dayOf(y, mo, dy), g(row, "name"), g(row, "email"), pn, cc, wo,
+              g(row, "current_profession"), g(row, "experience_in_years"), g(row, "age_group"), slug, platformOf(slug)]
+      });
+    }
+    rows.sort((a, b) => a.ts - b.ts || a.ord - b.ord);
+    // Bootcamp leads outrank Exotic: a person present in both stays in Bootcamp
+    const kept = onePass(rows.filter(r => r.isbc).concat(rows.filter(r => !r.isbc)), "pn", "email");
+    const header = ["Date Created","Day","name","email","phone_number","country_code","without country code","current_profession","experience_in_years","age_group","form_id.slug","Platform"];
+    return {
+      exAoa: [header, ...kept.filter(r => !r.isbc).map(r => r.out)],
+      bcAoa: [header, ...kept.filter(r => r.isbc).map(r => r.out)],
+      dropped: aoa.length - 1 - rows.length,
+      deduped: rows.length - kept.length
+    };
+  }
+
+  return { transformPaidRaw, transformLeadRaw, parsePaid, parseLead, platformOf };
+});
+
+
+/* ===================== UI ===================== */
+const LANTERN_SVG = `<svg viewBox="0 0 112 150" aria-hidden="true">
+  <ellipse class="halo" cx="56" cy="80" rx="70" ry="60" fill="url(#haloG)"/>
+  <ellipse class="wake" cx="56" cy="142" rx="38" ry="6" fill="url(#haloG)"/>
+  <line class="cord" x1="56" y1="2" x2="56" y2="18"/>
+  <rect class="cap" x="38" y="18" width="36" height="7" rx="2.5"/>
+  <rect class="body" x="20" y="25" width="72" height="92" rx="30"/>
+  <line class="rib" x1="24" y1="52" x2="88" y2="52"/>
+  <line class="rib" x1="22" y1="72" x2="90" y2="72"/>
+  <line class="rib" x1="24" y1="92" x2="88" y2="92"/>
+  <ellipse class="flame" cx="56" cy="78" rx="9" ry="15" fill="#fff4dc"/>
+  <rect class="cap" x="38" y="117" width="36" height="7" rx="2.5"/>
+</svg>`;
+document.querySelectorAll(".lantern .bob, #one .rise").forEach(el => { el.innerHTML = LANTERN_SVG; });
+
+const state = { main: null, bt: null, ex: null };
+const $ = s => document.querySelector(s);
+const pier = $("#pier"), input = $("#fileInput"), flowBtn = $("#flow"), statusEl = $("#status");
+const lanternsRow = $(".lanterns"), oneEl = $("#one");
+
+const toAoa = ws => XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: "" });
+const fmt = n => n.toLocaleString("en-IN");
+
+function setStatus(msg, cls) { statusEl.textContent = msg || ""; statusEl.className = cls || ""; }
+
+function renderSlots() {
+  const cfg = [
+    ["main", state.main, r => fmt(r.aoa.length - 1) + " rows" + (r.rawNote || "")],
+    ["bt",   state.bt,   r => fmt(r.aoa.length - 1) + " rows" + (r.rawNote || "")],
+    ["ex",   state.ex,   r => fmt(r.exAoa.length - 1) + " exotic, " + fmt(r.bcAoa.length - 1) + " bootcamp" + (r.rawNote || "")]
+  ];
+  cfg.forEach(([key, val, meta]) => {
+    const el = $("#slot-" + key);
+    el.classList.toggle("filled", !!val);
+    const fileEl = el.querySelector(".file"); fileEl.textContent = val ? val.name : ""; fileEl.title = val ? val.name : "";
+    el.querySelector(".meta").textContent = val ? meta(val) : "waiting";
+  });
+  const ready = !!(state.main && state.bt && state.ex);
+  flowBtn.disabled = !ready;
+  document.body.classList.toggle("ready", ready);
+  if (ready) setStatus("All three are afloat. Ready when you are.", "ok");
+}
+
+function classifyCsv(name, aoa) {
+  const n = name.toLowerCase();
+  if (/main/.test(n)) return "main";
+  if (/bootcamp|camp|bt[\W_]?paid/.test(n)) return "bt";
+  const H = aoa[0].map(h => String(h).trim());
+  if (H[0] === "createdAt") return "main";
+  if (H[H.length - 1] === "createdAt") return "bt";
+  return (aoa.length - 1) > 1000 ? "main" : "bt";
+}
+
+async function handleFiles(files) {
+  setStatus("");
+  for (const f of files) {
+    try {
+      if (/\.(xlsx|xls)$/i.test(f.name)) {
+        const wb = XLSX.read(await f.arrayBuffer(), { type: "array", raw: true, cellDates: false, dense: true });
+        const exN = wb.SheetNames.find(s => s.trim().toLowerCase() === "exotic");
+        const bcN = wb.SheetNames.find(s => s.trim().toLowerCase() === "bootcamp");
+        if (!exN || !bcN) { setStatus(`"${f.name}" needs both an Exotic and a Bootcamp sheet.`, "err"); continue; }
+        state.ex = { name: f.name, exAoa: toAoa(wb.Sheets[exN]), bcAoa: toAoa(wb.Sheets[bcN]) };
+      } else if (/\.csv$/i.test(f.name)) {
+        const wb = XLSX.read(await f.text(), { type: "string", raw: true, dense: true });
+        const rawAoa = toAoa(wb.Sheets[wb.SheetNames[0]]);
+        if (!rawAoa.length) { setStatus(`"${f.name}" is empty.`, "err"); continue; }
+        const H = rawAoa[0].map(h => String(h).trim());
+
+        if (H.includes("form_id.slug") && H.includes("date_created")) {
+          const t = RawCore.transformLeadRaw(rawAoa);
+          state.ex = { name: f.name, exAoa: t.exAoa, bcAoa: t.bcAoa,
+            rawNote: `. Raw: ${fmt(t.dropped)} off-slug dropped, ${fmt(t.deduped)} duplicates removed` };
+
+        } else if (H.includes("batchName") || H.includes("isMastery")) {
+          const inRows = rawAoa.length - 1;
+          const aoa = RawCore.transformPaidRaw(rawAoa);
+          const removed = inRows - (aoa.length - 1);
+          const bIdx = H.indexOf("batchName");
+          const isBt = bIdx >= 0 && rawAoa.slice(1, 6).some(r => /bootcamp/i.test(String(r[bIdx] || ""))) || /bootcamp|camp/i.test(f.name);
+          let slot = isBt ? "bt" : "main";
+          if (state[slot] && !state[slot === "main" ? "bt" : "main"]) slot = (slot === "main" ? "bt" : "main");
+          state[slot] = { name: f.name, aoa, rawNote: `. Raw: ${fmt(removed)} duplicates removed` };
+
+        } else if (H.includes("paymentSlug")) {
+          let slot = classifyCsv(f.name, rawAoa);
+          if (state[slot] && !state[slot === "main" ? "bt" : "main"]) slot = (slot === "main" ? "bt" : "main");
+          state[slot] = { name: f.name, aoa: rawAoa };
+        } else {
+          setStatus(`"${f.name}" is not a recognised export. It needs paymentSlug, batchName or form_id.slug columns.`, "err"); continue;
+        }
+      } else {
+        setStatus(`"${f.name}" was skipped. Only .csv and .xlsx files can be set afloat.`, "err");
+      }
+    } catch (e) {
+      setStatus(`Couldn't read "${f.name}": ${e.message}`, "err");
+    }
+  }
+  renderSlots();
+}
+
+pier.addEventListener("click", () => input.click());
+pier.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); input.click(); } });
+input.addEventListener("change", e => { handleFiles([...e.target.files]); input.value = ""; });
+let dragRippleT = 0;
+["dragover","dragenter"].forEach(ev => document.addEventListener(ev, e => {
+  e.preventDefault(); pier.classList.add("over");
+  if (performance.now() - dragRippleT > 140) { dragRippleT = performance.now(); Lake.ripple(e.clientX, e.clientY, 1.6, true); }
+}));
+["dragleave","drop"].forEach(ev => document.addEventListener(ev, e => { e.preventDefault(); if (ev === "drop" || !e.relatedTarget) pier.classList.remove("over"); }));
+document.addEventListener("drop", e => { Lake.ripple(e.clientX, e.clientY, 3.2, true); handleFiles([...e.dataTransfer.files]); });
+
+document.querySelectorAll(".remove").forEach(b => b.addEventListener("click", e => {
+  e.stopPropagation(); state[b.dataset.slot] = null; renderSlots(); setStatus("");
+}));
+$("#swap").addEventListener("click", () => { [state.main, state.bt] = [state.bt, state.main]; renderSlots(); });
+
+flowBtn.addEventListener("click", () => {
+  if (flowBtn.disabled) return;
+  flowBtn.disabled = true;
+  // aim every lantern at the spot where the one lantern forms
+  const o = oneEl.getBoundingClientRect(), ox = o.left + o.width / 2, oy = o.top + o.height / 2;
+  document.querySelectorAll(".slot .lantern").forEach(l => {
+    const r = l.getBoundingClientRect();
+    l.style.setProperty("--dx", (ox - (r.left + r.width / 2)) + "px");
+    l.style.setProperty("--dy", (oy - (r.top + r.height / 2)) + "px");
+  });
+  if (o.top < 0 || o.bottom > innerHeight) lanternsRow.scrollIntoView({ block: "center", behavior: "smooth" });
+  document.body.classList.add("flowing");
+  setStatus("The waters are meeting.");
+
+  // 1) lanterns gather and the one lantern glows (1.6s of CSS), 2) paint, 3) merge and write the workbook
+  //    (a heavy synchronous step, so it runs while the scene is still), 4) the one lantern rises on completion.
+  setTimeout(() => requestAnimationFrame(() => setTimeout(() => {
+    try {
+      const result = MergeCore.merge(state.main.aoa, state.bt.aoa, state.ex.exAoa, state.ex.bcAoa);
+      const wb = MergeCore.toWorkbook(XLSX, result);
+      XLSX.writeFile(wb, "Total_Sorted_Data_File__Main__BT_Paid__Exotic__Bootcamp__Merged.xlsx", { compression: true });
+
+      const rows = Object.entries(result.stats.counts)
+        .map(([k, v]) => `<tr><td>${k}</td><td class="num">${fmt(v)}</td></tr>`).join("");
+      const total = Object.values(result.stats.counts).reduce((a, b) => a + b, 0);
+      $("#sumRows").innerHTML = rows + `<tr class="total"><td>Total rows</td><td class="num">${fmt(total)}</td></tr>`;
+      const d = result.stats.dupesRemoved;
+      $("#dupeLine").textContent =
+        `Already-paid duplicates let go: ${fmt(d.exotic)} from Exotic, ${fmt(d.bootcamp)} from Bootcamp` +
+        (d.paid ? `, ${fmt(d.paid)} overlapping paid rows` : ``) +
+        `. Matched by phone or email, keeping BT Paid, then Main, then Bootcamp, then Exotic.`;
+
+      const r = oneEl.getBoundingClientRect();
+      Lake.ripple(r.left + r.width / 2, r.top + r.height * .62, 7, true); Lake.surge();
+      document.body.classList.add("risen");
+      setTimeout(() => { document.body.classList.add("done"); setStatus("Merged.", "ok"); }, 2600);
+    } catch (e) {
+      document.body.classList.remove("flowing", "risen");
+      flowBtn.disabled = false;
+      setStatus("The merge failed: " + e.message, "err");
+    }
+  }, 60)), 1650);
+});
+
+$("#again").addEventListener("click", () => {
+  document.body.classList.remove("done", "flowing", "risen");
+  document.querySelectorAll(".slot .lantern").forEach(l => { l.style.removeProperty("--dx"); l.style.removeProperty("--dy"); });
+  state.main = state.bt = state.ex = null;
+  renderSlots(); setStatus("");
+});
+
+/* ───────── the lake: stars, fireflies, ripples ───────── */
+const Lake = (function () {
+  const cv = $("#lake"), ctx = cv.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W = 0, H = 0, stars = [], flies = [], ripples = [], surgeLeft = 0;
+  let mx = -9999, my = -9999, lastRX = 0, lastRY = 0, lastFrame = 0;
+  const waterY = () => H * 0.49;
+
+  function size() {
+    W = cv.width = innerWidth; H = cv.height = innerHeight;
+    stars = Array.from({ length: Math.round(W / 9) }, () => ({
+      x: Math.random() * W, y: Math.random() * waterY() * 0.9, s: .5 + Math.random() * 1.3,
+      a: .25 + Math.random() * .6, ph: Math.random() * 6.28, k: .4 + Math.random() * 1.2 }));
+  }
+  function fly() {
+    return { x: Math.random() * W, y: waterY() * .85 + Math.random() * (H - waterY() * .85),
+      vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .18, s: 1 + Math.random() * 1.6,
+      ph: Math.random() * 6.28, k: .6 + Math.random() * 1.4, hue: 68 + Math.random() * 40 };
+  }
+  function ripple(x, y, scale = 1, force = false) {
+    if (reduced) return;
+    if (!force && y < waterY()) return;
+    ripples.push({ x, y, r: 2, max: (46 + Math.random() * 30) * scale, a: .3 * Math.min(1.5, scale), v: .75 * Math.sqrt(scale), w: .9 + .25 * scale });
+  }
+  function surge() { surgeLeft = 150; }
+
+  size(); addEventListener("resize", size);
+  for (let i = 0; i < 32; i++) flies.push(fly());
+
+  addEventListener("mousemove", e => {
+    mx = e.clientX; my = e.clientY;
+    if (my > waterY() && Math.hypot(mx - lastRX, my - lastRY) > 52) { lastRX = mx; lastRY = my; ripple(mx, my, 1); }
+  }, { passive: true });
+  addEventListener("mouseleave", () => { mx = my = -9999; });
+  addEventListener("pointerdown", e => { if (e.clientY > waterY()) ripple(e.clientX, e.clientY, 2.6); }, { passive: true });
+
+  (function tick(t) {
+    if (reduced) return;
+    requestAnimationFrame(tick);
+    if (document.hidden) return;
+    const dt = t - lastFrame; if (dt < 31) return;
+    const k = Math.min(dt, 100) / 16.7; lastFrame = t;
+    ctx.clearRect(0, 0, W, H);
+    // stars
+    for (const s of stars) {
+      const tw = .55 + .45 * Math.sin(t / 1000 * s.k + s.ph);
+      ctx.globalAlpha = s.a * tw; ctx.fillStyle = "#eef7ff";
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, 6.29); ctx.fill();
+    }
+    // ripples (flattened rings on the water)
+    ctx.lineWidth = 1;
+    ripples = ripples.filter(r => r.a > .012 && r.r < r.max);
+    for (const r of ripples) {
+      r.r += r.v * k * (1 + r.r / r.max); r.a *= Math.pow(.968, k);
+      ctx.globalAlpha = r.a; ctx.strokeStyle = "#bff0e3"; ctx.lineWidth = r.w;
+      ctx.beginPath(); ctx.ellipse(r.x, r.y, r.r, r.r * .3, 0, 0, 6.29); ctx.stroke();
+    }
+    // fireflies
+    if (surgeLeft > 0 && flies.length < 110) { for (let i = 0; i < 2; i++) { const f = fly(); f.vy = -.6 - Math.random(); f.s += .6; flies.push(f); } surgeLeft--; }
+    flies = flies.filter(f => f.y > -20 && f.y < H + 20 && f.x > -20 && f.x < W + 20);
+    while (flies.length < 32) flies.push(fly());
+    for (const f of flies) {
+      const dx = f.x - mx, dy = f.y - my, d = Math.hypot(dx, dy);
+      if (d < 150) { const push = (150 - d) / 150 * .55; f.vx += dx / d * push * .1; f.vy += dy / d * push * .1; }
+      f.vx += Math.sin(t / 1700 + f.ph) * .012; f.vy += Math.cos(t / 2100 + f.ph) * .008;
+      f.vx *= .985; f.vy *= .985;
+      f.x += f.vx * k; f.y += f.vy * k;
+      if (f.y < waterY() * .7) f.vy += .02;
+      const glow = .35 + .65 * Math.max(0, Math.sin(t / 1000 * f.k + f.ph));
+      ctx.globalAlpha = glow * .9; ctx.fillStyle = `hsl(${f.hue} 90% 68%)`;
+      ctx.beginPath(); ctx.arc(f.x, f.y, f.s, 0, 6.29); ctx.fill();
+      ctx.globalAlpha = glow * .22;
+      ctx.beginPath(); ctx.arc(f.x, f.y, f.s * 4, 0, 6.29); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  })(0);
+
+  return { ripple, surge };
+})();
+
+/* ───────── the view breathes with the pointer ───────── */
+(function () {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const far = $("#rangeFar"), near = $("#rangeNear"), aurora = $(".aurora");
+  let raf = false, px = 0, py = 0;
+  addEventListener("mousemove", e => {
+    px = e.clientX / innerWidth - .5; py = e.clientY / innerHeight - .5;
+    if (!raf) { raf = true; requestAnimationFrame(() => {
+      raf = false;
+      far.style.transform = `translate(${px * -10}px, ${py * -4}px)`;
+      near.style.transform = `translate(${px * -18}px, ${py * -7}px)`;
+      aurora.style.transform = `translate(${px * 14}px, ${py * 10}px)`;
+    }); }
+  }, { passive: true });
+})();
+
+renderSlots();
+</script>
+</body>
+</html>
