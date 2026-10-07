@@ -345,43 +345,41 @@
   const SOURCE_ORDER = ["Main","BT Paid","Exotic","Bootcamp"];   // row order inside the Total sheet
   const DOW  = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
-  // "What we will cover" messages: msg1 and msg4 are fixed, msg2/msg3 follow the (mapped) profession
-  const MSG1 = "What we will cover-";
-  const MSG4 = "It is a practical Hands-on Session.";
-  const MSG_GENERIC = [
-    "Turning your existing skill-set into AI-powered side-income opportunities.",
-    "Creating new income streams by combining your professional expertise with the help of AI."
-  ];
-  const MSG_BSAI = [
-    "Using AI to turn learning into skills, skills into opportunities, and opportunities into income.",
-    "Transforming what you already know into new earning possibilities with AI & much more."
-  ];
-  const MSG_BY_PROF = {
-    "Currently Student": [
-      "Discovering how AI can help you build skills and unlock side-income opportunities.",
-      "Using AI to build a skillset that goes beyond your academics, will help you even after you finish your school/college & much more."
-    ],
-    "Business Owner / Entrepreneur": [
-      "Implementing AI to streamline operations, strengthen sales & marketing, and unlock new revenue opportunities.",
-      "Developing AI skills to scale your business, increase efficiency & much more."
-    ],
-    "Educator / Teacher": [
-      "Going beyond the classroom with AI-powered skills and new income possibilities.",
-      "Turning your teaching expertise into additional income opportunities with AI skills & much more."
-    ],
-    "Finance / Banking / Insurance": [
-      "Creating new income streams by combining your finance expertise with AI.",
-      "Developing AI skills to unlock new career opportunities, earning potential & much more."
-    ],
-    "Freelancer / Consultant": MSG_BSAI,
-    "Unemployed": MSG_BSAI,
-    "IT / Software": [
-      "Turning your tech skills into AI-powered side-income opportunities.",
-      "Building and monetizing AI-based solutions, services, and digital projects & Much More."
-    ]
+  // "What we will cover" messages, from the Profession-wise Message sheet (Oct 2026). Each group holds msg1 to msg4;
+  // MSG_GROUP maps the Profession (PG) value to its group. Other, Sales, blank and anything new fall to GENERIC.
+  const MSG_TABLE = {
+    "STUDENTS": ["What we will cover:", "Discovering how AI can help you build skills and unlock side-income opportunities.", "Using AI to build a skillset that goes beyond your academics, will help you even after you finish your school/college & much more.", "It is a practical Hands-on Session."],
+    "TECH": ["What we will cover:", "Turning your tech skills into AI-powered side-income opportunities.", "Building and monetizing AI-based solutions, services, and digital projects & Much More.", "It is a practical Hands-on Session."],
+    "FINANCE": ["What we will cover:", "Creating new income streams by combining your finance expertise with AI.", "Developing AI skills to unlock new career opportunities, earning potential & much more.", "It is a practical Hands-on Session."],
+    "BUSINESS": ["What we will cover:", "Implementing AI to streamline operations, strengthen sales & marketing, and unlock new revenue opportunities.", "Developing AI skills to scale your business, increase efficiency & much more.", "It is a practical Hands-on Session."],
+    "EDUCATOR": ["What we will cover:", "Going beyond the classroom with AI-powered skills and new income possibilities.", "Turning your teaching expertise into additional income opportunities with AI skills & much more.", "It is a practical Hands-on Session."],
+    "UNEMPLOYED & FREELANCER": ["What we will cover:", "Using AI to turn learning into skills, skills into opportunities, and opportunities into income.", "Transforming what you already know into new earning possibilities with AI & much more.", "It is a practical Hands-on Session."],
+    "ARTS / MEDIA / CREATIVE PROFESSIONALS": ["What we will cover:", "Using AI to turn your creative skills into digital, independent, and side-income opportunities.", "Creating AI-powered content, designs, creative services, and digital products that can help you build additional income streams & much more.", "It is a practical Hands-on Session."],
+    "OPERATIONS/ MANUFACTURING": ["What we will cover:", "Using AI tools to streamline operations, improve productivity, and simplify repetitive tasks.", "Turning your operational expertise into AI-powered solutions and new side-income opportunities & much more.", "It is a practical Hands-on Session."],
+    "DATA PROFESSIONALS": ["What we will cover:", "Using AI to turn your data skills into consulting, digital, and side-income opportunities.", "Leveraging AI for data analysis, reporting, dashboards, and automation to create new income streams & much more.", "It is a practical Hands-on Session."],
+    "HEALTHCARE PROFESSIONALS": ["What we will cover:", "Using AI to enhance your healthcare expertise and explore new side-income opportunities.", "Using AI to streamline clinical documentation, case summaries, medical analysis & much more.", "It is a practical Hands-on Session."],
+    "HR PROFESSIONALS": ["What we will cover:", "Using AI to enhance your HR expertise and explore new side-income opportunities.", "Leveraging AI for recruitment, content, training, and HR services to create additional earning possibilities & much more.", "It is a practical Hands-on Session."],
+    "MARKETING": ["What we will cover:", "Using AI tools to create content, improve campaigns, and boost marketing productivity.", "Turning your marketing expertise into AI-powered services and new side-income opportunities & much more.", "It is a practical Hands-on Session."],
+    "GOVT. / DEFENCE PROFESSIONALS": ["What we will cover:", "Using AI to build valuable skills that complement your government or defence experience.", "Exploring AI-powered opportunities in training, research, content, consulting, and other areas beyond your current role & much more.", "It is a practical Hands-on Session."],
+    "GENERIC (Others, Blanks)": ["What we will cover:", "Turning your existing skill-set into AI-powered side-income opportunities.", "Creating new income streams by combining your professional expertise with the help of AI.", "It is a practical Hands-on Session."]
   };
-  // everything else (Other, Operations, Sales, Marketing, HR, Data, Healthcare, Govt, Arts, blank "---") → generic
-  const msgsFor = prof => { const m = MSG_BY_PROF[prof] || MSG_GENERIC; return [MSG1, m[0], m[1], MSG4]; };
+  const MSG_GROUP = {
+    "Currently Student": "STUDENTS",
+    "IT / Software": "TECH",
+    "Finance / Banking / Insurance": "FINANCE",
+    "Business Owner / Entrepreneur": "BUSINESS",
+    "Educator / Teacher": "EDUCATOR",
+    "Unemployed": "UNEMPLOYED & FREELANCER",
+    "Freelancer / Consultant": "UNEMPLOYED & FREELANCER",
+    "Arts / Media / Creative Professional": "ARTS / MEDIA / CREATIVE PROFESSIONALS",
+    "Operations / Manufacturing": "OPERATIONS/ MANUFACTURING",
+    "Data": "DATA PROFESSIONALS",
+    "Healthcare": "HEALTHCARE PROFESSIONALS",
+    "HR": "HR PROFESSIONALS",
+    "Marketing": "MARKETING",
+    "Govt /Defence Professional": "GOVT. / DEFENCE PROFESSIONALS"
+  };
+  const msgsFor = prof => MSG_TABLE[MSG_GROUP[prof]] || MSG_TABLE["GENERIC (Others, Blanks)"];
 
   const norm = v => (v === null || v === undefined) ? "" : String(v).trim();
   const toNum = v => { const s = norm(v); return /^\d+$/.test(s) ? Number(s) : v; };
