@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sangam, the weekly merge</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id=%22g%22%20x1=%220%22%20y1=%220%22%20x2=%220%22%20y2=%221%22%3E%3Cstop%20offset=%220%22%20stop-color=%22#1b3a57%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22#0b1d2a%22/%3E%3C/linearGradient%3E%3CradialGradient%20id=%22h%22%20cx=%2250%%22%20cy=%2266%%22%20r=%2240%%22%3E%3Cstop%20offset=%220%22%20stop-color=%22#ffb86b%22%20stop-opacity=%22.55%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22#ffb86b%22%20stop-opacity=%220%22/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle%20cx=%2232%22%20cy=%2232%22%20r=%2231%22%20fill=%22url%28#g%29%22/%3E%3Ccircle%20cx=%2232%22%20cy=%2242%22%20r=%2222%22%20fill=%22url%28#h%29%22/%3E%3Cg%20fill=%22none%22%20stroke=%22#9fe3d2%22%20stroke-width=%223.2%22%20stroke-linecap=%22round%22%3E%3Cpath%20d=%22M13%2013c5%2016%2013%2022%2019%2029%22/%3E%3Cpath%20d=%22M32%2011v31%22/%3E%3Cpath%20d=%22M51%2013c-5%2016-13%2022-19%2029%22/%3E%3Cpath%20d=%22M32%2042v12%22%20stroke=%22#d6f6ec%22%20stroke-width=%223.8%22/%3E%3C/g%3E%3Ccircle%20cx=%2232%22%20cy=%2242%22%20r=%223.6%22%20fill=%22#ffd9a0%22/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2064%2064%22%3E%3Cdefs%3E%3ClinearGradient%20id=%22g%22%20x1=%220%22%20y1=%220%22%20x2=%220%22%20y2=%221%22%3E%3Cstop%20offset=%220%22%20stop-color=%22%231b3a57%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22%230b1d2a%22/%3E%3C/linearGradient%3E%3CradialGradient%20id=%22h%22%20cx=%2250%25%22%20cy=%2266%25%22%20r=%2240%25%22%3E%3Cstop%20offset=%220%22%20stop-color=%22%23ffb86b%22%20stop-opacity=%22.55%22/%3E%3Cstop%20offset=%221%22%20stop-color=%22%23ffb86b%22%20stop-opacity=%220%22/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle%20cx=%2232%22%20cy=%2232%22%20r=%2231%22%20fill=%22url%28%23g%29%22/%3E%3Ccircle%20cx=%2232%22%20cy=%2242%22%20r=%2222%22%20fill=%22url%28%23h%29%22/%3E%3Cg%20fill=%22none%22%20stroke=%22%239fe3d2%22%20stroke-width=%223.2%22%20stroke-linecap=%22round%22%3E%3Cpath%20d=%22M13%2013c5%2016%2013%2022%2019%2029%22/%3E%3Cpath%20d=%22M32%2011v31%22/%3E%3Cpath%20d=%22M51%2013c-5%2016-13%2022-19%2029%22/%3E%3Cpath%20d=%22M32%2042v12%22%20stroke=%22%23d6f6ec%22%20stroke-width=%223.8%22/%3E%3C/g%3E%3Ccircle%20cx=%2232%22%20cy=%2242%22%20r=%223.6%22%20fill=%22%23ffd9a0%22/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
@@ -331,7 +333,7 @@
 
 <footer>A quiet tool for the weekly merge. House of EdTech lead ops.</footer>
 
-<script>
+<script id="core">
 (function (root, factory) {
   if (typeof module !== "undefined" && module.exports) module.exports = factory();
   else root.MergeCore = factory();
@@ -683,7 +685,240 @@
   return { transformPaidRaw, transformLeadRaw, parsePaid, parseLead, platformOf };
 });
 
+/* FastOut: writes the Total workbook quickly. SheetJS builds the workbook skeleton (styles, rels, content types);
+   the two bulk parts, the sheet XML and the shared-string table, are generated here in the exact form SheetJS
+   would write them (verified byte for byte), then every zip entry is deflated with a caller-supplied
+   deflate-raw function (native CompressionStream in the browser). */
+(function (root, factory) {
+  if (typeof module !== "undefined" && module.exports) module.exports = factory();
+  else root.FastOut = factory();
+})(typeof self !== "undefined" ? self : this, function () {
 
+  const XML_HEADER = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n';
+  const ENC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&apos;", '"': "&quot;" };
+  const decregex = /[&<>'"]/g, charegex = /[\u0000-\u0008\u000b-\u001f]/g, straywsregex = /^\s|\s$|[\t\n\r]/;
+  const escapexml = text => (text + "").replace(decregex, y => ENC[y]).replace(charegex, s => "_x" + ("000" + s.charCodeAt(0).toString(16)).slice(-4) + "_");
+
+  const COLS = []; for (let c = 0; c < 64; c++) { let s = "", n = c + 1; while (n > 0) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = (n - m - 1) / 26; } COLS[c] = s; }
+
+  /* ---- zip helpers ---- */
+  const SIG_LOCAL = 0x04034b50, SIG_CENTRAL = 0x02014b50, SIG_EOCD = 0x06054b50;
+  const u16 = (dv, p) => dv.getUint16(p, true), u32 = (dv, p) => dv.getUint32(p, true);
+  const CRC_TABLE = (() => { const t = new Int32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? (c >>> 1) ^ 0xEDB88320 : c >>> 1; t[n] = c; } return t; })();
+  function crc32(u8) { let c = -1; for (let i = 0; i < u8.length; i++) c = (c >>> 8) ^ CRC_TABLE[(c ^ u8[i]) & 0xFF]; return (c ^ -1) >>> 0; }
+  const utf8 = typeof TextEncoder !== "undefined" ? new TextEncoder() : null;
+  const encode = s => utf8 ? utf8.encode(s) : new Uint8Array(Buffer.from(s, "utf8"));
+  const decode = u8 => utf8 ? new TextDecoder().decode(u8) : Buffer.from(u8).toString("utf8");
+
+  function readEntries(buf) {
+    const dv = new DataView(buf), u8 = new Uint8Array(buf);
+    let eocd = -1;
+    for (let p = buf.byteLength - 22; p >= Math.max(0, buf.byteLength - 65557); p--) { if (u32(dv, p) === SIG_EOCD) { eocd = p; break; } }
+    if (eocd < 0) throw new Error("zip: end record not found");
+    const count = u16(dv, eocd + 10), cdOff = u32(dv, eocd + 16);
+    const entries = []; let p = cdOff;
+    for (let i = 0; i < count; i++) {
+      if (u32(dv, p) !== SIG_CENTRAL) throw new Error("zip: bad central directory");
+      const method = u16(dv, p + 10), time = u16(dv, p + 12), date = u16(dv, p + 14), crc = u32(dv, p + 16);
+      const csize = u32(dv, p + 20), usize = u32(dv, p + 24), nlen = u16(dv, p + 28), elen = u16(dv, p + 30), clen = u16(dv, p + 32);
+      const off = u32(dv, p + 42), name = u8.slice(p + 46, p + 46 + nlen);
+      if (u32(dv, off) !== SIG_LOCAL) throw new Error("zip: bad local header");
+      if (method !== 0) throw new Error("zip: expected a stored entry");
+      const dataStart = off + 30 + u16(dv, off + 26) + u16(dv, off + 28);
+      entries.push({ name, nameStr: decode(name), time, date, crc, usize, data: u8.slice(dataStart, dataStart + csize) });
+      p += 46 + nlen + elen + clen;
+    }
+    return entries;
+  }
+
+  // entries: [{name:Uint8Array, time, date, crc, usize, data:Uint8Array}]; deflateRaw: Uint8Array => Promise<Uint8Array>
+  async function packZip(entries, deflateRaw) {
+    const parts = [], central = []; let offset = 0;
+    for (const e of entries) {
+      const comp = await deflateRaw(e.data);
+      const local = new Uint8Array(30 + e.name.length), dv = new DataView(local.buffer);
+      dv.setUint32(0, SIG_LOCAL, true); dv.setUint16(4, 20, true); dv.setUint16(6, 0, true); dv.setUint16(8, 8, true);
+      dv.setUint16(10, e.time, true); dv.setUint16(12, e.date, true); dv.setUint32(14, e.crc, true);
+      dv.setUint32(18, comp.length, true); dv.setUint32(22, e.usize, true); dv.setUint16(26, e.name.length, true); dv.setUint16(28, 0, true);
+      local.set(e.name, 30);
+      const cd = new Uint8Array(46 + e.name.length), cv = new DataView(cd.buffer);
+      cv.setUint32(0, SIG_CENTRAL, true); cv.setUint16(4, 20, true); cv.setUint16(6, 20, true); cv.setUint16(8, 0, true); cv.setUint16(10, 8, true);
+      cv.setUint16(12, e.time, true); cv.setUint16(14, e.date, true); cv.setUint32(16, e.crc, true);
+      cv.setUint32(20, comp.length, true); cv.setUint32(24, e.usize, true); cv.setUint16(28, e.name.length, true);
+      cv.setUint16(30, 0, true); cv.setUint16(32, 0, true); cv.setUint16(34, 0, true); cv.setUint16(36, 0, true); cv.setUint32(38, 0, true);
+      cv.setUint32(42, offset, true); cd.set(e.name, 46);
+      parts.push(local, comp); offset += local.length + comp.length; central.push(cd);
+    }
+    const cdStart = offset, cdSize = central.reduce((a, c) => a + c.length, 0);
+    const eocd = new Uint8Array(22), ev = new DataView(eocd.buffer);
+    ev.setUint32(0, SIG_EOCD, true); ev.setUint16(4, 0, true); ev.setUint16(6, 0, true);
+    ev.setUint16(8, entries.length, true); ev.setUint16(10, entries.length, true);
+    ev.setUint32(12, cdSize, true); ev.setUint32(16, cdStart, true); ev.setUint16(20, 0, true);
+    const out = new Uint8Array(offset + cdSize + 22); let p = 0;
+    for (const part of parts) { out.set(part, p); p += part.length; }
+    for (const c of central) { out.set(c, p); p += c.length; }
+    out.set(eocd, p);
+    return out.buffer;
+  }
+
+  /* ---- the Total workbook ---- */
+  const DATE_Z = "m/d/yy h:mm", PHONE_Z = "0";
+
+  // A two-row stand-in using the same cell kinds in the same order, so styles.xml and the part list come out the same.
+  function skeleton(XLSX, OUT_HEADERS, PHONE_COL, colWidths) {
+    const ws = {};
+    OUT_HEADERS.forEach((h, c) => { ws[COLS[c] + "1"] = c === PHONE_COL ? { t: "s", v: h, z: PHONE_Z } : { t: "s", v: h }; });
+    ws["A2"] = { t: "n", v: 1, z: DATE_Z }; ws["B2"] = { t: "s", v: "x" };
+    ws[COLS[PHONE_COL] + "2"] = { t: "n", v: 1, z: PHONE_Z }; ws[COLS[PHONE_COL + 1] + "2"] = { t: "n", v: 1 };
+    ws["!ref"] = XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: { c: OUT_HEADERS.length - 1, r: 1 } });
+    ws["!cols"] = colWidths.map(w => ({ wch: w }));
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Total");
+    const buf = XLSX.write(wb, { bookType: "xlsx", type: "array", compression: false, bookSST: true });
+    const entries = readEntries(buf);
+    const sheet = entries.find(e => e.nameStr === "xl/worksheets/sheet1.xml"), sst = entries.find(e => e.nameStr === "xl/sharedStrings.xml");
+    if (!sheet || !sst) throw new Error("workbook skeleton is missing a part");
+    const xml = decode(sheet.data);
+    const styleOf = ref => { const m = xml.match(new RegExp('<c r="' + ref + '" s="(\\d+)"')); return m ? m[1] : null; };
+    const dateS = styleOf("A2"), phoneS = styleOf(COLS[PHONE_COL] + "2");
+    if (dateS === null || phoneS === null) throw new Error("workbook skeleton styles not found");
+    const head = xml.slice(0, xml.indexOf("<sheetData>")), tail = xml.slice(xml.indexOf("</sheetData>") + "</sheetData>".length);
+    return { entries, sheet, sst, head, tail, dateS, phoneS };
+  }
+
+  function buildParts(sk, OUT_HEADERS, PHONE_COL, rows) {
+    const nCols = OUT_HEADERS.length, lastRef = COLS[nCols - 1] + (rows.length + 1);
+    const sstIdx = new Map(), sstList = []; let count = 0;
+    const idx = s => { let i = sstIdx.get(s); if (i === undefined) { i = sstList.length; sstIdx.set(s, i); sstList.push(s); } count++; return i; };
+    const out = new Array(rows.length + 1);
+    let hr = '<row r="1">';
+    for (let c = 0; c < nCols; c++) hr += '<c r="' + COLS[c] + '1"' + (c === PHONE_COL ? ' s="' + sk.phoneS + '"' : "") + ' t="s"><v>' + idx(OUT_HEADERS[c]) + "</v></c>";
+    out[0] = hr + "</row>";
+    for (let i = 0; i < rows.length; i++) {
+      const cells = rows[i].cells, rr = i + 2; let r = '<row r="' + rr + '">';
+      for (let c = 0; c < nCols; c++) {
+        const val = cells[c];
+        if (val === null || val === undefined) continue;
+        if (typeof val === "object" && val.date) r += '<c r="' + COLS[c] + rr + '" s="' + sk.dateS + '"><v>' + val.v + "</v></c>";
+        else if (typeof val === "number") r += '<c r="' + COLS[c] + rr + '"' + (c === PHONE_COL ? ' s="' + sk.phoneS + '"' : "") + "><v>" + val + "</v></c>";
+        else { const s = String(val); if (s === "") continue;
+          r += '<c r="' + COLS[c] + rr + '"' + (c === PHONE_COL ? ' s="' + sk.phoneS + '"' : "") + ' t="s"><v>' + idx(s) + "</v></c>"; }
+      }
+      out[i + 1] = r + "</row>";
+    }
+    const head = sk.head.replace(/<dimension ref="[^"]*"\/>/, '<dimension ref="A1:' + lastRef + '"/>');
+    const tail = sk.tail.replace(/sqref="[^"]*"/, 'sqref="A1:' + lastRef + '"');
+    const sheetXml = head + "<sheetData>" + out.join("") + "</sheetData>" + tail;
+    const si = new Array(sstList.length);
+    for (let i = 0; i < sstList.length; i++) { const s = sstList[i]; si[i] = "<si><t" + (straywsregex.test(s) ? ' xml:space="preserve"' : "") + ">" + escapexml(s) + "</t></si>"; }
+    const sstXml = XML_HEADER + '<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="' + count + '" uniqueCount="' + sstList.length + '">' + si.join("") + "</sst>";
+    return { sheetXml, sstXml };
+  }
+
+  // rows: merged rows ({cells}) in output order. Returns the .xlsx bytes as an ArrayBuffer.
+  async function writeTotal(XLSX, OUT_HEADERS, PHONE_COL, colWidths, rows, deflateRaw) {
+    const sk = skeleton(XLSX, OUT_HEADERS, PHONE_COL, colWidths);
+    const parts = buildParts(sk, OUT_HEADERS, PHONE_COL, rows);
+    const swap = (entry, xml) => { const data = encode(xml); entry.data = data; entry.usize = data.length; entry.crc = crc32(data); };
+    swap(sk.sheet, parts.sheetXml); swap(sk.sst, parts.sstXml);
+    return packZip(sk.entries, deflateRaw);
+  }
+
+  return { writeTotal, buildParts, skeleton, readEntries, packZip, crc32 };
+});
+
+/* Engine: owns the three loaded exports and runs the pipeline. The same code runs inside a Web Worker when one is
+   available, or on the main thread otherwise, so the UI only ever sees small result objects. */
+(function (root, factory) {
+  if (typeof module !== "undefined" && module.exports) module.exports = factory();
+  else root.Engine = factory();
+})(typeof self !== "undefined" ? self : this, function () {
+  const WIDTHS = [16,8,20,30,14,12,18,10,10,28,12,26,12,10];
+  const OUT_NAME = "Total_Sorted_Data_File__Main__BT_Paid__Exotic__Bootcamp__Merged.xlsx";
+
+  // Native deflate-raw (CompressionStream) when the browser has it; null means "use the SheetJS writer instead".
+  function nativeDeflate() {
+    if (typeof CompressionStream !== "function" || typeof Blob !== "function" || typeof Response !== "function") return null;
+    try { new CompressionStream("deflate-raw"); } catch (e) { return null; }
+    return async u8 => new Uint8Array(await new Response(new Blob([u8]).stream().pipeThrough(new CompressionStream("deflate-raw"))).arrayBuffer());
+  }
+
+  function create(XLSX, MergeCore, RawCore, FastOut) {
+    const state = { main: null, bt: null, ex: null };
+    const toAoa = ws => XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: "" });
+
+    function classifyCsv(name, aoa) {
+      const n = name.toLowerCase();
+      if (/main/.test(n)) return "main";
+      if (/bootcamp|camp|bt[\W_]?paid/.test(n)) return "bt";
+      const H = aoa[0].map(h => String(h).trim());
+      if (H[0] === "createdAt") return "main";
+      if (H[H.length - 1] === "createdAt") return "bt";
+      return (aoa.length - 1) > 1000 ? "main" : "bt";
+    }
+    const other = slot => slot === "main" ? "bt" : "main";
+
+    // kind "xlsx": data is an ArrayBuffer; kind "csv": data is the file text. Returns {slot, info} or {error}.
+    function load(name, kind, data) {
+      if (kind === "xlsx") {
+        const wb = XLSX.read(data, { type: "array", raw: true, cellDates: false, dense: true });
+        const exN = wb.SheetNames.find(s => s.trim().toLowerCase() === "exotic");
+        const bcN = wb.SheetNames.find(s => s.trim().toLowerCase() === "bootcamp");
+        if (!exN || !bcN) return { error: '"' + name + '" needs both an Exotic and a Bootcamp sheet.' };
+        state.ex = { exAoa: toAoa(wb.Sheets[exN]), bcAoa: toAoa(wb.Sheets[bcN]) };
+        return { slot: "ex", info: { name, exRows: state.ex.exAoa.length - 1, bcRows: state.ex.bcAoa.length - 1 } };
+      }
+      const wb = XLSX.read(data, { type: "string", raw: true, dense: true });
+      const rawAoa = toAoa(wb.Sheets[wb.SheetNames[0]]);
+      if (!rawAoa.length) return { error: '"' + name + '" is empty.' };
+      const H = rawAoa[0].map(h => String(h).trim());
+
+      if (H.includes("form_id.slug") && H.includes("date_created")) {
+        const t = RawCore.transformLeadRaw(rawAoa);
+        state.ex = { exAoa: t.exAoa, bcAoa: t.bcAoa };
+        return { slot: "ex", info: { name, exRows: t.exAoa.length - 1, bcRows: t.bcAoa.length - 1, raw: { dropped: t.dropped, deduped: t.deduped } } };
+      }
+      if (H.includes("batchName") || H.includes("isMastery")) {
+        const inRows = rawAoa.length - 1;
+        const aoa = RawCore.transformPaidRaw(rawAoa);
+        const bIdx = H.indexOf("batchName");
+        const isBt = bIdx >= 0 && rawAoa.slice(1, 6).some(r => /bootcamp/i.test(String(r[bIdx] || ""))) || /bootcamp|camp/i.test(name);
+        let slot = isBt ? "bt" : "main";
+        if (state[slot] && !state[other(slot)]) slot = other(slot);
+        state[slot] = { aoa };
+        return { slot, info: { name, rows: aoa.length - 1, raw: { removed: inRows - (aoa.length - 1) } } };
+      }
+      if (H.includes("paymentSlug")) {
+        let slot = classifyCsv(name, rawAoa);
+        if (state[slot] && !state[other(slot)]) slot = other(slot);
+        state[slot] = { aoa: rawAoa };
+        return { slot, info: { name, rows: rawAoa.length - 1 } };
+      }
+      return { error: '"' + name + '" is not a recognised export. It needs paymentSlug, batchName or form_id.slug columns.' };
+    }
+
+    function remove(slot) { state[slot] = null; }
+    function swap() { const m = state.main; state.main = state.bt; state.bt = m; }
+    function reset() { state.main = state.bt = state.ex = null; }
+
+    // Returns {stats, buffer}; buffer holds the .xlsx bytes.
+    async function merge(deflateRaw) {
+      if (!(state.main && state.bt && state.ex)) throw new Error("all three exports are needed");
+      const result = MergeCore.merge(state.main.aoa, state.bt.aoa, state.ex.exAoa, state.ex.bcAoa);
+      const PHONE_COL = MergeCore.OUT_HEADERS.indexOf("phoneNumber");
+      let buffer;
+      if (deflateRaw) buffer = await FastOut.writeTotal(XLSX, MergeCore.OUT_HEADERS, PHONE_COL, WIDTHS, result.sheets.Total, deflateRaw);
+      else buffer = XLSX.write(MergeCore.toWorkbook(XLSX, result), { bookType: "xlsx", type: "array", compression: true, bookSST: true });
+      return { stats: result.stats, buffer };
+    }
+
+    return { load, remove, swap, reset, merge };
+  }
+
+  return { create, nativeDeflate, OUT_NAME };
+});
+
+</script>
+<script>
 /* ===================== UI ===================== */
 const LANTERN_SVG = `<svg viewBox="0 0 112 150" aria-hidden="true">
   <ellipse class="halo" cx="56" cy="80" rx="70" ry="60" fill="url(#haloG)"/>
@@ -699,21 +934,62 @@ const LANTERN_SVG = `<svg viewBox="0 0 112 150" aria-hidden="true">
 </svg>`;
 document.querySelectorAll(".lantern .bob, #one .rise").forEach(el => { el.innerHTML = LANTERN_SVG; });
 
-const state = { main: null, bt: null, ex: null };
+const state = { main: null, bt: null, ex: null };   // what the UI shows; the files themselves live in the engine
 const $ = s => document.querySelector(s);
 const pier = $("#pier"), input = $("#fileInput"), flowBtn = $("#flow"), statusEl = $("#status");
 const lanternsRow = $(".lanterns"), oneEl = $("#one");
-
-const toAoa = ws => XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: "" });
 const fmt = n => n.toLocaleString("en-IN");
+
+/* The engine runs in a Web Worker so parsing and merging never freeze the lake; if a worker can't start
+   (older browser, blocked script), the same engine runs on the main thread instead. */
+const Bridge = (function () {
+  const XLSX_SRC = document.querySelector('script[src*="xlsx"]').src;
+  const CORE_SRC = document.getElementById("core").textContent;
+  const SHIM = "\nimportScripts(" + JSON.stringify(XLSX_SRC) + ");\n" +
+    "const engine = Engine.create(XLSX, MergeCore, RawCore, FastOut); const deflateRaw = Engine.nativeDeflate();\n" +
+    "self.onmessage = async e => { const { id, op, args } = e.data; try { let result, transfer = [];\n" +
+    "  if (op === 'load') result = engine.load(args.name, args.kind, args.data);\n" +
+    "  else if (op === 'remove') engine.remove(args.slot); else if (op === 'swap') engine.swap(); else if (op === 'reset') engine.reset();\n" +
+    "  else if (op === 'merge') { result = await engine.merge(deflateRaw); transfer = [result.buffer]; }\n" +
+    "  self.postMessage({ id, ok: true, result }, transfer); } catch (err) { self.postMessage({ id, ok: false, error: (err && err.message) || String(err) }); } };\n" +
+    "self.postMessage({ ready: true });\n";
+  let worker = null, local = null, seq = 0; const pending = new Map();
+  const ready = new Promise(resolve => {
+    const src = CORE_SRC + SHIM;
+    const fail = w => { try { w && w.terminate(); } catch (e) {} resolve(false); };
+    const boot = w => {
+      const timer = setTimeout(() => fail(w), 8000);
+      w.onerror = () => { clearTimeout(timer); fail(w); };
+      w.onmessage = e => {
+        if (e.data && e.data.ready) { clearTimeout(timer); worker = w; w.onerror = ev => { for (const m of pending.values()) m.reject(new Error(ev.message || "worker error")); pending.clear(); }; resolve(true); return; }
+        const m = pending.get(e.data.id); if (!m) return; pending.delete(e.data.id);
+        e.data.ok ? m.resolve(e.data.result) : m.reject(new Error(e.data.error));
+      };
+    };
+    try { boot(new Worker(URL.createObjectURL(new Blob([src], { type: "text/javascript" })))); }
+    catch (e1) { try { boot(new Worker("data:text/javascript;base64," + btoa(unescape(encodeURIComponent(src))))); } catch (e2) { fail(null); } }
+  });
+  async function call(op, args, transfer) {
+    if (await ready) return new Promise((resolve, reject) => { const id = ++seq; pending.set(id, { resolve, reject }); worker.postMessage({ id, op, args }, transfer || []); });
+    if (!local) local = Engine.create(XLSX, MergeCore, RawCore, FastOut);
+    switch (op) {
+      case "load":   return local.load(args.name, args.kind, args.data);
+      case "remove": return local.remove(args.slot);
+      case "swap":   return local.swap();
+      case "reset":  return local.reset();
+      case "merge":  return local.merge(Engine.nativeDeflate());
+    }
+  }
+  return { call, ready };
+})();
 
 function setStatus(msg, cls) { statusEl.textContent = msg || ""; statusEl.className = cls || ""; }
 
 function renderSlots() {
   const cfg = [
-    ["main", state.main, r => fmt(r.aoa.length - 1) + " rows" + (r.rawNote || "")],
-    ["bt",   state.bt,   r => fmt(r.aoa.length - 1) + " rows" + (r.rawNote || "")],
-    ["ex",   state.ex,   r => fmt(r.exAoa.length - 1) + " exotic, " + fmt(r.bcAoa.length - 1) + " bootcamp" + (r.rawNote || "")]
+    ["main", state.main, r => fmt(r.rows) + " rows" + (r.rawNote || "")],
+    ["bt",   state.bt,   r => fmt(r.rows) + " rows" + (r.rawNote || "")],
+    ["ex",   state.ex,   r => fmt(r.exRows) + " exotic, " + fmt(r.bcRows) + " bootcamp" + (r.rawNote || "")]
   ];
   cfg.forEach(([key, val, meta]) => {
     const el = $("#slot-" + key);
@@ -727,62 +1003,40 @@ function renderSlots() {
   if (ready) setStatus("All three are afloat. Ready when you are.", "ok");
 }
 
-function classifyCsv(name, aoa) {
-  const n = name.toLowerCase();
-  if (/main/.test(n)) return "main";
-  if (/bootcamp|camp|bt[\W_]?paid/.test(n)) return "bt";
-  const H = aoa[0].map(h => String(h).trim());
-  if (H[0] === "createdAt") return "main";
-  if (H[H.length - 1] === "createdAt") return "bt";
-  return (aoa.length - 1) > 1000 ? "main" : "bt";
+function metaOf(r) {
+  const info = r.info, raw = info.raw;
+  const note = !raw ? "" : raw.removed !== undefined
+    ? ". Raw: " + fmt(raw.removed) + " duplicates removed"
+    : ". Raw: " + fmt(raw.dropped) + " off-slug dropped, " + fmt(raw.deduped) + " duplicates removed";
+  return Object.assign({ name: info.name, rows: info.rows, exRows: info.exRows, bcRows: info.bcRows }, note ? { rawNote: note } : {});
 }
 
-async function handleFiles(files) {
-  setStatus("");
-  for (const f of files) {
-    try {
-      if (/\.(xlsx|xls)$/i.test(f.name)) {
-        const wb = XLSX.read(await f.arrayBuffer(), { type: "array", raw: true, cellDates: false, dense: true });
-        const exN = wb.SheetNames.find(s => s.trim().toLowerCase() === "exotic");
-        const bcN = wb.SheetNames.find(s => s.trim().toLowerCase() === "bootcamp");
-        if (!exN || !bcN) { setStatus(`"${f.name}" needs both an Exotic and a Bootcamp sheet.`, "err"); continue; }
-        state.ex = { name: f.name, exAoa: toAoa(wb.Sheets[exN]), bcAoa: toAoa(wb.Sheets[bcN]) };
-      } else if (/\.csv$/i.test(f.name)) {
-        const wb = XLSX.read(await f.text(), { type: "string", raw: true, dense: true });
-        const rawAoa = toAoa(wb.Sheets[wb.SheetNames[0]]);
-        if (!rawAoa.length) { setStatus(`"${f.name}" is empty.`, "err"); continue; }
-        const H = rawAoa[0].map(h => String(h).trim());
-
-        if (H.includes("form_id.slug") && H.includes("date_created")) {
-          const t = RawCore.transformLeadRaw(rawAoa);
-          state.ex = { name: f.name, exAoa: t.exAoa, bcAoa: t.bcAoa,
-            rawNote: `. Raw: ${fmt(t.dropped)} off-slug dropped, ${fmt(t.deduped)} duplicates removed` };
-
-        } else if (H.includes("batchName") || H.includes("isMastery")) {
-          const inRows = rawAoa.length - 1;
-          const aoa = RawCore.transformPaidRaw(rawAoa);
-          const removed = inRows - (aoa.length - 1);
-          const bIdx = H.indexOf("batchName");
-          const isBt = bIdx >= 0 && rawAoa.slice(1, 6).some(r => /bootcamp/i.test(String(r[bIdx] || ""))) || /bootcamp|camp/i.test(f.name);
-          let slot = isBt ? "bt" : "main";
-          if (state[slot] && !state[slot === "main" ? "bt" : "main"]) slot = (slot === "main" ? "bt" : "main");
-          state[slot] = { name: f.name, aoa, rawNote: `. Raw: ${fmt(removed)} duplicates removed` };
-
-        } else if (H.includes("paymentSlug")) {
-          let slot = classifyCsv(f.name, rawAoa);
-          if (state[slot] && !state[slot === "main" ? "bt" : "main"]) slot = (slot === "main" ? "bt" : "main");
-          state[slot] = { name: f.name, aoa: rawAoa };
-        } else {
-          setStatus(`"${f.name}" is not a recognised export. It needs paymentSlug, batchName or form_id.slug columns.`, "err"); continue;
-        }
-      } else {
-        setStatus(`"${f.name}" was skipped. Only .csv and .xlsx files can be set afloat.`, "err");
+let loading = Promise.resolve();          // loads and the actions on them run one at a time, in the order they arrive
+const queue = fn => (loading = loading.then(fn, fn));
+function handleFiles(files) {
+  return queue(async () => {
+    setStatus("");
+    for (const f of files) {
+      try {
+        let kind, data;
+        if (/\.(xlsx|xls)$/i.test(f.name)) { kind = "xlsx"; data = await f.arrayBuffer(); }
+        else if (/\.csv$/i.test(f.name)) { kind = "csv"; data = await f.text(); }
+        else { setStatus(`"${f.name}" was skipped. Only .csv and .xlsx files can be set afloat.`, "err"); continue; }
+        const r = await Bridge.call("load", { name: f.name, kind, data }, kind === "xlsx" ? [data] : []);
+        if (r.error) { setStatus(r.error, "err"); continue; }
+        state[r.slot] = metaOf(r);
+      } catch (e) {
+        setStatus(`Couldn't read "${f.name}": ${e.message}`, "err");
       }
-    } catch (e) {
-      setStatus(`Couldn't read "${f.name}": ${e.message}`, "err");
     }
-  }
-  renderSlots();
+    renderSlots();
+  });
+}
+
+function download(buffer, name) {
+  const url = URL.createObjectURL(new Blob([buffer], { type: "application/octet-stream" }));
+  const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 
 pier.addEventListener("click", () => input.click());
@@ -797,11 +1051,17 @@ let dragRippleT = 0;
 document.addEventListener("drop", e => { Lake.ripple(e.clientX, e.clientY, 3.2, true); handleFiles([...e.dataTransfer.files]); });
 
 document.querySelectorAll(".remove").forEach(b => b.addEventListener("click", e => {
-  e.stopPropagation(); state[b.dataset.slot] = null; renderSlots(); setStatus("");
+  e.stopPropagation();
+  queue(async () => { state[b.dataset.slot] = null; await Bridge.call("remove", { slot: b.dataset.slot }); renderSlots(); setStatus(""); });
 }));
-$("#swap").addEventListener("click", () => { [state.main, state.bt] = [state.bt, state.main]; renderSlots(); });
+$("#swap").addEventListener("click", () => queue(async () => {
+  [state.main, state.bt] = [state.bt, state.main]; await Bridge.call("swap", {}); renderSlots();
+}));
 
-flowBtn.addEventListener("click", () => {
+const delay = ms => new Promise(r => setTimeout(r, ms));
+const nextPaint = () => new Promise(r => requestAnimationFrame(() => setTimeout(r, 60)));
+
+flowBtn.addEventListener("click", async () => {
   if (flowBtn.disabled) return;
   flowBtn.disabled = true;
   // aim every lantern at the spot where the one lantern forms
@@ -815,41 +1075,39 @@ flowBtn.addEventListener("click", () => {
   document.body.classList.add("flowing");
   setStatus("The waters are meeting.");
 
-  // 1) lanterns gather and the one lantern glows (1.6s of CSS), 2) paint, 3) merge and write the workbook
-  //    (a heavy synchronous step, so it runs while the scene is still), 4) the one lantern rises on completion.
-  setTimeout(() => requestAnimationFrame(() => setTimeout(() => {
-    try {
-      const result = MergeCore.merge(state.main.aoa, state.bt.aoa, state.ex.exAoa, state.ex.bcAoa);
-      const wb = MergeCore.toWorkbook(XLSX, result);
-      XLSX.writeFile(wb, "Total_Sorted_Data_File__Main__BT_Paid__Exotic__Bootcamp__Merged.xlsx", { compression: true });
+  // 1) the lanterns gather and the one lantern glows (1.65s), 2) the merge runs meanwhile in the worker
+  //    (on the main-thread fallback it waits for the gather to finish and paint first), 3) the one lantern rises.
+  const inWorker = await Bridge.ready;
+  const mergeP = (inWorker ? loading : loading.then(() => delay(1650)).then(nextPaint)).then(() => Bridge.call("merge", {}));
+  try {
+    const [res] = await Promise.all([mergeP, delay(1650)]);
+    download(res.buffer, Engine.OUT_NAME);
 
-      const rows = Object.entries(result.stats.counts)
-        .map(([k, v]) => `<tr><td>${k}</td><td class="num">${fmt(v)}</td></tr>`).join("");
-      const total = Object.values(result.stats.counts).reduce((a, b) => a + b, 0);
-      $("#sumRows").innerHTML = rows + `<tr class="total"><td>Total rows</td><td class="num">${fmt(total)}</td></tr>`;
-      const d = result.stats.dupesRemoved;
-      $("#dupeLine").textContent =
-        `Already-paid duplicates let go: ${fmt(d.exotic)} from Exotic, ${fmt(d.bootcamp)} from Bootcamp` +
-        (d.paid ? `, ${fmt(d.paid)} overlapping paid rows` : ``) +
-        `. Matched by phone or email, keeping BT Paid, then Main, then Bootcamp, then Exotic.`;
+    const rows = Object.entries(res.stats.counts)
+      .map(([k, v]) => `<tr><td>${k}</td><td class="num">${fmt(v)}</td></tr>`).join("");
+    const total = Object.values(res.stats.counts).reduce((a, b) => a + b, 0);
+    $("#sumRows").innerHTML = rows + `<tr class="total"><td>Total rows</td><td class="num">${fmt(total)}</td></tr>`;
+    const d = res.stats.dupesRemoved;
+    $("#dupeLine").textContent =
+      `Already-paid duplicates let go: ${fmt(d.exotic)} from Exotic, ${fmt(d.bootcamp)} from Bootcamp` +
+      (d.paid ? `, ${fmt(d.paid)} overlapping paid rows` : ``) +
+      `. Matched by phone or email, keeping BT Paid, then Main, then Bootcamp, then Exotic.`;
 
-      const r = oneEl.getBoundingClientRect();
-      Lake.ripple(r.left + r.width / 2, r.top + r.height * .62, 7, true); Lake.surge();
-      document.body.classList.add("risen");
-      setTimeout(() => { document.body.classList.add("done"); setStatus("Merged.", "ok"); }, 2600);
-    } catch (e) {
-      document.body.classList.remove("flowing", "risen");
-      flowBtn.disabled = false;
-      setStatus("The merge failed: " + e.message, "err");
-    }
-  }, 60)), 1650);
+    const r = oneEl.getBoundingClientRect();
+    Lake.ripple(r.left + r.width / 2, r.top + r.height * .62, 7, true); Lake.surge();
+    document.body.classList.add("risen");
+    setTimeout(() => { document.body.classList.add("done"); setStatus("Merged.", "ok"); }, 2600);
+  } catch (e) {
+    document.body.classList.remove("flowing", "risen");
+    flowBtn.disabled = false;
+    setStatus("The merge failed: " + e.message, "err");
+  }
 });
 
 $("#again").addEventListener("click", () => {
   document.body.classList.remove("done", "flowing", "risen");
   document.querySelectorAll(".slot .lantern").forEach(l => { l.style.removeProperty("--dx"); l.style.removeProperty("--dy"); });
-  state.main = state.bt = state.ex = null;
-  renderSlots(); setStatus("");
+  queue(async () => { state.main = state.bt = state.ex = null; await Bridge.call("reset", {}); renderSlots(); setStatus(""); });
 });
 
 /* ───────── the lake: stars, fireflies, ripples ───────── */
