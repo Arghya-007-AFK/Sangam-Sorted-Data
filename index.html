@@ -542,7 +542,7 @@
     "961 962 963 964 965 966 967 968 970 971 972 973 974 975 976 977 992 993 994 995 996 998").split(" ");
   const CCS = new Set(ITU);
   const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  const KEEP = ["ai-tools","ai-bootcamp","ai-claude","py"];
+  const KEEP = ["ai-tools","ai-bootcamp","ai-claude","py","2nd-income"];   // 2nd-income-* leads go to Exotic
   const PLATFORM_ALIAS = { "big-basket":"Bigbasket", "gpay":"Googlepay", "1mg":"1Mg" };
 
   const norm = v => (v === null || v === undefined) ? "" : String(v).trim();
@@ -621,7 +621,7 @@
   function platformOf(slug) {
     let s = norm(slug);
     if (s === "ai-bootcamp") return "Bootcamp";
-    for (const f of ["ai-bootcamp-","ai-claude-","ai-tools-","py-"]) {
+    for (const f of ["ai-bootcamp-","ai-claude-","ai-tools-","py-","2nd-income-"]) {
       if (s.startsWith(f)) { s = s.slice(f.length); break; }
     }
     s = s.replace(/-?\d+$/, "");
