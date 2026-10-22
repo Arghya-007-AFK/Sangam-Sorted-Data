@@ -106,8 +106,8 @@
   #pier:hover .choose, #pier.over .choose{background:#c7f1e6; transform:translateY(-1px);}
   #fileInput{display:none;}
 
-  /* two lanterns */
-  .lanterns{position:relative; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin:10px auto 0; max-width:620px;}
+  /* three lanterns */
+  .lanterns{position:relative; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin:10px auto 0; max-width:880px;}
   .slot{position:relative; min-width:0; padding:10px 10px 8px; border-radius:22px; transition:background .5s;}
   .slot.filled{background:radial-gradient(70% 90% at 50% 20%, rgba(255,184,107,.07), transparent 70%);}
   .lantern{display:block; width:100px; height:134px; margin:0 auto; position:relative;
@@ -144,6 +144,8 @@
   .slot.filled .remove{display:inline-block;}
   .slot .label{transition:opacity .6s;}
   body.flowing .slot .label{opacity:0;}
+  #swap{transition:opacity .5s, color .3s;}
+  body.flowing #swap{opacity:0; pointer-events:none;}
   body.flowing .lantern{transform:translate(var(--dx,0px), var(--dy,0px)); opacity:0;}
 
   /* the one lantern that forms at the centre and rises */
@@ -159,6 +161,10 @@
   @keyframes rise{0%{transform:translate(0,0) scale(1); opacity:1;}45%{transform:translate(22px,-34vh) scale(.74); opacity:1;}
     100%{transform:translate(-14px,-82vh) scale(.4); opacity:0;}}
 
+  #swap{margin:4px auto 0; background:none; border:none; color:var(--paper-faint); font-size:14px; cursor:pointer;
+    padding:6px 10px; border-radius:999px; transition:color .3s;}
+  #swap:hover{color:var(--mint);}
+  #swap:focus-visible{outline:2px solid var(--mint);}
 
   /* the merge */
   .meet{margin:12px auto 0;}
@@ -268,14 +274,14 @@
     <circle cx="32" cy="40" r="3.4" fill="#ffd9a0"/>
   </svg>
   <h1>Sangam</h1>
-  <div class="tagline">Two exports flow in. One Total sheet flows out.</div>
+  <div class="tagline">Three exports flow in. One Total sheet flows out.</div>
 
-  <div id="pier" role="button" tabindex="0" aria-label="Drop the two exports here, or press to choose files">
+  <div id="pier" role="button" tabindex="0" aria-label="Drop the three exports here, or press to choose files">
     <svg class="rings" viewBox="0 0 64 30" aria-hidden="true">
       <ellipse cx="32" cy="15" rx="30" ry="9"/><ellipse cx="32" cy="15" rx="30" ry="9"/><ellipse cx="32" cy="15" rx="30" ry="9"/>
     </svg>
-    <h2>Set your two exports afloat</h2>
-    <p>Drag the main paid report and the lead export here, raw or already sorted. The lake knows them apart.</p>
+    <h2>Set your three exports afloat</h2>
+    <p>Drag the main paid report, the bootcamp paid report and the lead export here, raw or already sorted. The lake knows them apart.</p>
     <span class="choose">Choose files</span>
     <input type="file" id="fileInput" multiple accept=".csv,.xlsx,.xls">
   </div>
@@ -289,6 +295,14 @@
         <button class="remove" data-slot="main">Remove</button>
       </div>
     </div>
+    <div class="slot" id="slot-bt">
+      <div class="lantern"><div class="bob"></div></div>
+      <div class="label">
+        <div class="role">Bootcamp paid</div>
+        <div class="file"></div><div class="meta"></div>
+        <button class="remove" data-slot="bt">Remove</button>
+      </div>
+    </div>
     <div class="slot" id="slot-ex">
       <div class="lantern"><div class="bob"></div></div>
       <div class="label">
@@ -299,10 +313,11 @@
     </div>
     <div id="one" aria-hidden="true"><div class="rise"></div></div>
   </div>
+  <button id="swap">Swap the two paid files</button>
 
   <div class="meet">
     <button id="flow" disabled>Let the waters meet</button>
-    <div class="hint">Merges the two into one Total sheet of 18 columns and downloads the workbook.</div>
+    <div class="hint">Merges the three into one Total sheet of 18 columns and downloads the workbook.</div>
     <div id="status" aria-live="polite"></div>
   </div>
 </main>
@@ -310,7 +325,7 @@
 <div id="veil"></div>
 <div id="result" role="dialog" aria-label="Merge complete">
   <h2>Merged into one Total sheet</h2>
-  <div class="fname">Total_Sorted_Data_File__Main__Exotic__Bootcamp__Merged.xlsx has downloaded.</div>
+  <div class="fname">Total_Sorted_Data_File__Main__BT_Paid__Exotic__Bootcamp__Merged.xlsx has downloaded.</div>
   <table><tbody id="sumRows"></tbody></table>
   <div id="dupeLine"></div>
   <button id="again">Start again</button>
@@ -327,7 +342,7 @@
   const OUT_HEADERS = ["createdAt","Day","name","email","phoneNumber","country_code",
     "without country code","Amount","AgeGroup","Profession (PG)","Exp","paymentSlug","platform","Lead",
     "msg1","msg2","msg3","msg4"];
-  const SOURCE_ORDER = ["Main","Exotic","Bootcamp"];   // row order inside the Total sheet
+  const SOURCE_ORDER = ["Main","BT Paid","Exotic","Bootcamp"];   // row order inside the Total sheet
   const DOW  = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
   // "What we will cover" messages, from the Profession-wise Message sheet (Oct 2026). Each group holds msg1 to msg4;
@@ -464,10 +479,11 @@
     return out;
   }
 
-  function merge(mainAoa, exoticAoa, bootcampAoa) {
+  function merge(mainAoa, btAoa, exoticAoa, bootcampAoa) {
     const mainRows = buildPaidRows(mainAoa, "Main");
+    const btRows   = buildPaidRows(btAoa, "BT Paid");
 
-    // global one-pass dedup by phone OR email, priority: Main, Bootcamp, Exotic
+    // global one-pass dedup by phone OR email, priority: Main, BT Paid, Exotic, Bootcamp
     const keyP = new Set(), keyE = new Set();
     const keepRow = r => {
       if ((r.phone && keyP.has(r.phone)) || (r.email && keyE.has(r.email))) return false;
@@ -477,23 +493,24 @@
     };
     const exAll = buildLeadRows(exoticAoa, "Exotic");
     const bcAll = buildLeadRows(bootcampAoa, "Bootcamp");
-    const mainAll = mainRows;
-    // priority: Main, then Bootcamp, then Exotic
+    const mainAll = mainRows, btAll = btRows;
+    // priority: BT Paid, then Main, then Bootcamp, then Exotic
+    const btK   = btAll.filter(keepRow);
     const mainK = mainAll.filter(keepRow);
     const bc = bcAll.filter(keepRow);
     const ex = exAll.filter(keepRow);
 
-    // One Total sheet: every kept row, stacked Main → Exotic → Bootcamp
+    // One Total sheet: every kept row, stacked Main → BT Paid → Exotic → Bootcamp
     // (each block already date-sorted by the raw transformers); the Lead column tells them apart.
-    const bySource = { "Main": mainK, "Exotic": ex, "Bootcamp": bc };
+    const bySource = { "Main": mainK, "BT Paid": btK, "Exotic": ex, "Bootcamp": bc };
     const total = [].concat(...SOURCE_ORDER.map(s => bySource[s]));
 
     return {
       sheets: { "Total": total },
       stats: {
-        inputs: { main: mainRows.length, exotic: exAll.length, bootcamp: bcAll.length },
+        inputs: { main: mainRows.length, btPaid: btRows.length, exotic: exAll.length, bootcamp: bcAll.length },
         dupesRemoved: { exotic: exAll.length - ex.length, bootcamp: bcAll.length - bc.length,
-                        paid: mainAll.length - mainK.length },
+                        paid: (mainAll.length - mainK.length) + (btAll.length - btK.length) },
         counts: Object.fromEntries(SOURCE_ORDER.map(s => [s, bySource[s].length]))
       }
     };
@@ -807,14 +824,14 @@
   return { writeTotal, buildParts, skeleton, readEntries, packZip, crc32 };
 });
 
-/* Engine: owns the two loaded exports and runs the pipeline. The same code runs inside a Web Worker when one is
+/* Engine: owns the three loaded exports and runs the pipeline. The same code runs inside a Web Worker when one is
    available, or on the main thread otherwise, so the UI only ever sees small result objects. */
 (function (root, factory) {
   if (typeof module !== "undefined" && module.exports) module.exports = factory();
   else root.Engine = factory();
 })(typeof self !== "undefined" ? self : this, function () {
   const WIDTHS = [16,8,20,30,14,12,18,10,10,28,12,26,12,10];
-  const OUT_NAME = "Total_Sorted_Data_File__Main__Exotic__Bootcamp__Merged.xlsx";
+  const OUT_NAME = "Total_Sorted_Data_File__Main__BT_Paid__Exotic__Bootcamp__Merged.xlsx";
 
   // Native deflate-raw (CompressionStream) when the browser has it; null means "use the SheetJS writer instead".
   function nativeDeflate() {
@@ -824,8 +841,19 @@
   }
 
   function create(XLSX, MergeCore, RawCore, FastOut) {
-    const state = { main: null, ex: null };
+    const state = { main: null, bt: null, ex: null };
     const toAoa = ws => XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: "" });
+
+    function classifyCsv(name, aoa) {
+      const n = name.toLowerCase();
+      if (/main/.test(n)) return "main";
+      if (/bootcamp|camp|bt[\W_]?paid/.test(n)) return "bt";
+      const H = aoa[0].map(h => String(h).trim());
+      if (H[0] === "createdAt") return "main";
+      if (H[H.length - 1] === "createdAt") return "bt";
+      return (aoa.length - 1) > 1000 ? "main" : "bt";
+    }
+    const other = slot => slot === "main" ? "bt" : "main";
 
     // kind "xlsx": data is an ArrayBuffer; kind "csv": data is the file text. Returns {slot, info} or {error}.
     function load(name, kind, data) {
@@ -850,23 +878,30 @@
       if (H.includes("batchName") || H.includes("isMastery")) {
         const inRows = rawAoa.length - 1;
         const aoa = RawCore.transformPaidRaw(rawAoa);
-        state.main = { aoa };
-        return { slot: "main", info: { name, rows: aoa.length - 1, raw: { removed: inRows - (aoa.length - 1) } } };
+        const bIdx = H.indexOf("batchName");
+        const isBt = bIdx >= 0 && rawAoa.slice(1, 6).some(r => /bootcamp/i.test(String(r[bIdx] || ""))) || /bootcamp|camp/i.test(name);
+        let slot = isBt ? "bt" : "main";
+        if (state[slot] && !state[other(slot)]) slot = other(slot);
+        state[slot] = { aoa };
+        return { slot, info: { name, rows: aoa.length - 1, raw: { removed: inRows - (aoa.length - 1) } } };
       }
       if (H.includes("paymentSlug")) {
-        state.main = { aoa: rawAoa };
-        return { slot: "main", info: { name, rows: rawAoa.length - 1 } };
+        let slot = classifyCsv(name, rawAoa);
+        if (state[slot] && !state[other(slot)]) slot = other(slot);
+        state[slot] = { aoa: rawAoa };
+        return { slot, info: { name, rows: rawAoa.length - 1 } };
       }
       return { error: '"' + name + '" is not a recognised export. It needs paymentSlug, batchName or form_id.slug columns.' };
     }
 
     function remove(slot) { state[slot] = null; }
-    function reset() { state.main = state.ex = null; }
+    function swap() { const m = state.main; state.main = state.bt; state.bt = m; }
+    function reset() { state.main = state.bt = state.ex = null; }
 
     // Returns {stats, buffer}; buffer holds the .xlsx bytes.
     async function merge(deflateRaw) {
-      if (!(state.main && state.ex)) throw new Error("both exports are needed");
-      const result = MergeCore.merge(state.main.aoa, state.ex.exAoa, state.ex.bcAoa);
+      if (!(state.main && state.bt && state.ex)) throw new Error("all three exports are needed");
+      const result = MergeCore.merge(state.main.aoa, state.bt.aoa, state.ex.exAoa, state.ex.bcAoa);
       const PHONE_COL = MergeCore.OUT_HEADERS.indexOf("phoneNumber");
       let buffer;
       if (deflateRaw) buffer = await FastOut.writeTotal(XLSX, MergeCore.OUT_HEADERS, PHONE_COL, WIDTHS, result.sheets.Total, deflateRaw);
@@ -874,7 +909,7 @@
       return { stats: result.stats, buffer };
     }
 
-    return { load, remove, reset, merge };
+    return { load, remove, swap, reset, merge };
   }
 
   return { create, nativeDeflate, OUT_NAME };
@@ -897,7 +932,7 @@ const LANTERN_SVG = `<svg viewBox="0 0 112 150" aria-hidden="true">
 </svg>`;
 document.querySelectorAll(".lantern .bob, #one .rise").forEach(el => { el.innerHTML = LANTERN_SVG; });
 
-const state = { main: null, ex: null };   // what the UI shows; the files themselves live in the engine
+const state = { main: null, bt: null, ex: null };   // what the UI shows; the files themselves live in the engine
 const $ = s => document.querySelector(s);
 const pier = $("#pier"), input = $("#fileInput"), flowBtn = $("#flow"), statusEl = $("#status");
 const lanternsRow = $(".lanterns"), oneEl = $("#one");
@@ -912,7 +947,7 @@ const Bridge = (function () {
     "const engine = Engine.create(XLSX, MergeCore, RawCore, FastOut); const deflateRaw = Engine.nativeDeflate();\n" +
     "self.onmessage = async e => { const { id, op, args } = e.data; try { let result, transfer = [];\n" +
     "  if (op === 'load') result = engine.load(args.name, args.kind, args.data);\n" +
-    "  else if (op === 'remove') engine.remove(args.slot); else if (op === 'reset') engine.reset();\n" +
+    "  else if (op === 'remove') engine.remove(args.slot); else if (op === 'swap') engine.swap(); else if (op === 'reset') engine.reset();\n" +
     "  else if (op === 'merge') { result = await engine.merge(deflateRaw); transfer = [result.buffer]; }\n" +
     "  self.postMessage({ id, ok: true, result }, transfer); } catch (err) { self.postMessage({ id, ok: false, error: (err && err.message) || String(err) }); } };\n" +
     "self.postMessage({ ready: true });\n";
@@ -938,6 +973,7 @@ const Bridge = (function () {
     switch (op) {
       case "load":   return local.load(args.name, args.kind, args.data);
       case "remove": return local.remove(args.slot);
+      case "swap":   return local.swap();
       case "reset":  return local.reset();
       case "merge":  return local.merge(Engine.nativeDeflate());
     }
@@ -950,6 +986,7 @@ function setStatus(msg, cls) { statusEl.textContent = msg || ""; statusEl.classN
 function renderSlots() {
   const cfg = [
     ["main", state.main, r => fmt(r.rows) + " rows" + (r.rawNote || "")],
+    ["bt",   state.bt,   r => fmt(r.rows) + " rows" + (r.rawNote || "")],
     ["ex",   state.ex,   r => fmt(r.exRows) + " exotic, " + fmt(r.bcRows) + " bootcamp" + (r.rawNote || "")]
   ];
   cfg.forEach(([key, val, meta]) => {
@@ -958,10 +995,10 @@ function renderSlots() {
     const fileEl = el.querySelector(".file"); fileEl.textContent = val ? val.name : ""; fileEl.title = val ? val.name : "";
     el.querySelector(".meta").textContent = val ? meta(val) : "waiting";
   });
-  const ready = !!(state.main && state.ex);
+  const ready = !!(state.main && state.bt && state.ex);
   flowBtn.disabled = !ready;
   document.body.classList.toggle("ready", ready);
-  if (ready) setStatus("Both are afloat. Ready when you are.", "ok");
+  if (ready) setStatus("All three are afloat. Ready when you are.", "ok");
 }
 
 function metaOf(r) {
@@ -1015,6 +1052,9 @@ document.querySelectorAll(".remove").forEach(b => b.addEventListener("click", e 
   e.stopPropagation();
   queue(async () => { state[b.dataset.slot] = null; await Bridge.call("remove", { slot: b.dataset.slot }); renderSlots(); setStatus(""); });
 }));
+$("#swap").addEventListener("click", () => queue(async () => {
+  [state.main, state.bt] = [state.bt, state.main]; await Bridge.call("swap", {}); renderSlots();
+}));
 
 const delay = ms => new Promise(r => setTimeout(r, ms));
 const nextPaint = () => new Promise(r => requestAnimationFrame(() => setTimeout(r, 60)));
@@ -1049,7 +1089,7 @@ flowBtn.addEventListener("click", async () => {
     $("#dupeLine").textContent =
       `Already-paid duplicates let go: ${fmt(d.exotic)} from Exotic, ${fmt(d.bootcamp)} from Bootcamp` +
       (d.paid ? `, ${fmt(d.paid)} overlapping paid rows` : ``) +
-      `. Matched by phone or email, keeping Main, then Bootcamp, then Exotic.`;
+      `. Matched by phone or email, keeping BT Paid, then Main, then Bootcamp, then Exotic.`;
 
     const r = oneEl.getBoundingClientRect();
     Lake.ripple(r.left + r.width / 2, r.top + r.height * .62, 7, true); Lake.surge();
@@ -1065,7 +1105,7 @@ flowBtn.addEventListener("click", async () => {
 $("#again").addEventListener("click", () => {
   document.body.classList.remove("done", "flowing", "risen");
   document.querySelectorAll(".slot .lantern").forEach(l => { l.style.removeProperty("--dx"); l.style.removeProperty("--dy"); });
-  queue(async () => { state.main = state.ex = null; await Bridge.call("reset", {}); renderSlots(); setStatus(""); });
+  queue(async () => { state.main = state.bt = state.ex = null; await Bridge.call("reset", {}); renderSlots(); setStatus(""); });
 });
 
 /* ───────── the lake: stars, fireflies, ripples ───────── */
